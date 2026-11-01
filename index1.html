@@ -1,0 +1,1546 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🔥 GTD VIP TOOL v1.9 🔥</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+    --red:#ff0040; --dark-red:#8b0020; --purple:#a855f7; --dark-purple:#6b21a8;
+    --light-purple:#c4b5fd; --dark-pink:#ec4899; --pink:#f472b6; --light-pink:#fbcfe8;
+    --white:#fff; --gray:#888; --green:#22ff88; --yellow:#ffdd00; --gold:#ffcc44;
+}
+
+html, body {
+    width: 100%;
+    min-height: 100vh;
+    overflow-x: hidden;
+    background: radial-gradient(ellipse at center, #150005 0%, #000 100%);
+    font-family: 'Courier New', 'Consolas', 'Monaco', monospace;
+    color: var(--white);
+    user-select: none;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 20px 20px 280px;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 1000px;
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
+    position: relative;
+}
+
+/* ============================================
+   ASCII — Y HỆT CHECK BLACKLIST HTML GỐC
+   ============================================ */
+.ascii-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 60vh;
+    flex-direction: column;
+    padding: 40px 10px;
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.ascii-line {
+    font-family: 'Courier New', 'Consolas', monospace;
+    font-size: clamp(8px, 1.4vw, 16px);
+    line-height: 1.2;
+    white-space: pre;
+    display: block;
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    transform: translateX(-30px);
+    letter-spacing: 0.5px;
+    text-shadow: 0 0 8px currentColor, 0 0 16px currentColor;
+}
+
+.ascii-line.visible {
+    opacity: 1 !important;
+    transform: translateX(0) !important;
+}
+
+.ascii-line:nth-child(1)  { color: var(--red); }
+.ascii-line:nth-child(2)  { color: var(--dark-red); }
+.ascii-line:nth-child(3)  { color: var(--purple); }
+.ascii-line:nth-child(4)  { color: var(--dark-purple); }
+.ascii-line:nth-child(5)  { color: var(--light-purple); }
+.ascii-line:nth-child(6)  { color: var(--dark-pink); }
+.ascii-line:nth-child(7)  { color: var(--pink); }
+.ascii-line:nth-child(8)  { color: var(--light-pink); }
+
+.transition-text {
+    font-family: 'Courier New', monospace;
+    font-size: clamp(14px, 2.5vw, 24px);
+    font-weight: bold;
+    color: var(--pink);
+    letter-spacing: 4px;
+    animation: pulseText .5s infinite;
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+@keyframes pulseText { 0%,100%{opacity:1;} 50%{opacity:.6;} }
+@keyframes shine { 0%{left:-100%;} 100%{left:100%;} }
+@keyframes glowGold { from{text-shadow:0 0 10px var(--gold);} to{text-shadow:0 0 20px var(--gold), 0 0 40px var(--yellow);} }
+@keyframes iconPulse { from{transform:scale(1);} to{transform:scale(1.1);} }
+@keyframes spinGlow { 0%,100%{transform:rotate(0deg);} 50%{transform:rotate(180deg);} }
+@keyframes fadeIn { from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);} }
+@keyframes slideIn { from{opacity:0; transform:translateX(-30px);} to{opacity:1; transform:translateX(0);} }
+@keyframes arrowPulse { from{transform:translateX(0);} to{transform:translateX(10px);} }
+@keyframes newNameGlow { from{box-shadow:0 0 10px var(--green);} to{box-shadow:0 0 25px var(--green);} }
+@keyframes dotBlink { from{opacity:1;} to{opacity:0.4;} }
+
+/* ============================================
+   SCREENS
+   ============================================ */
+.screen { display: none; }
+.screen.active { display: block !important; animation: fadeIn .6s ease; }
+
+/* ============================================
+   JP BANNER
+   ============================================ */
+.jp-banner {
+    border: 2px solid var(--dark-pink);
+    border-radius: 12px;
+    padding: 25px 30px;
+    margin: 20px 0;
+    background: linear-gradient(135deg, rgba(139,0,32,.2), rgba(107,33,168,.2));
+    box-shadow: 0 0 20px rgba(244,114,182,.3);
+    position: relative;
+    overflow: hidden;
+}
+.jp-banner::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,.1), transparent);
+    animation: shine 3s infinite;
+}
+.jp-title {
+    font-size: clamp(18px, 3vw, 28px);
+    font-weight: bold;
+    color: var(--pink);
+    text-shadow: 0 0 10px var(--pink), 0 0 20px var(--dark-pink);
+    letter-spacing: 3px;
+    margin-bottom: 8px;
+}
+.jp-sub { font-size: clamp(12px, 1.8vw, 16px); color: var(--light-pink); margin: 4px 0; }
+.jp-by { font-size: clamp(14px, 2vw, 18px); color: var(--gold); margin-top: 8px; animation: glowGold 1.5s infinite alternate; }
+
+/* ============================================
+   MENU
+   ============================================ */
+.menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin: 30px 0;
+}
+.menu-card {
+    padding: 26px 18px;
+    border: 2px solid var(--dark-pink);
+    border-radius: 14px;
+    background: linear-gradient(135deg, rgba(139,0,32,.15), rgba(107,33,168,.1));
+    cursor: pointer;
+    transition: all .3s ease;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+.menu-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,.15), transparent);
+    animation: shine 2.5s infinite;
+}
+.menu-card:hover {
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 0 30px var(--pink);
+    border-color: var(--pink);
+}
+.menu-icon { font-size: 48px; margin-bottom: 12px; animation: iconPulse 2s infinite alternate; }
+.menu-title { font-size: 16px; font-weight: bold; color: var(--light-pink); text-shadow: 0 0 10px var(--pink); letter-spacing: 2px; margin-bottom: 6px; }
+.menu-desc { font-size: 11px; color: var(--gray); line-height: 1.5; }
+
+.back-btn {
+    padding: 10px 25px;
+    margin-bottom: 15px;
+    background: rgba(168,85,247,.2);
+    border: 2px solid var(--purple);
+    color: var(--white);
+    font-family: inherit;
+    font-size: 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all .3s ease;
+    letter-spacing: 2px;
+    font-weight: bold;
+}
+.back-btn:hover { background: rgba(168,85,247,.4); box-shadow: 0 0 15px var(--purple); }
+
+/* ============================================
+   FORM
+   ============================================ */
+.form-section {
+    margin: 20px 0;
+    padding: 25px;
+    border: 2px solid var(--dark-pink);
+    border-radius: 12px;
+    background: rgba(139,0,32,.1);
+    box-shadow: 0 0 20px rgba(244,114,182,.15);
+}
+.form-title {
+    font-size: clamp(16px, 2.2vw, 20px);
+    color: var(--light-pink);
+    margin-bottom: 20px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px var(--pink);
+}
+
+.server-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 10px; margin-bottom: 15px; }
+.server-btn {
+    padding: 12px 15px;
+    border: 2px solid var(--purple);
+    border-radius: 8px;
+    background: rgba(168,85,247,.1);
+    color: var(--white);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all .3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.server-btn:hover { background: rgba(168,85,247,.3); box-shadow: 0 0 15px var(--purple); transform: translateY(-2px); }
+.server-btn.active {
+    background: linear-gradient(135deg, var(--dark-pink), var(--purple));
+    border-color: var(--pink);
+    box-shadow: 0 0 20px var(--pink);
+}
+
+.input-wrap { margin: 15px auto; max-width: 500px; }
+.input-label {
+    display: block;
+    font-size: 12px;
+    color: var(--light-purple);
+    margin-bottom: 8px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-align: left;
+}
+.input-wrap input {
+    width: 100%;
+    padding: 14px 18px;
+    font-family: inherit;
+    font-size: 15px;
+    color: var(--white);
+    background: rgba(0,0,0,.5);
+    border: 2px solid var(--dark-pink);
+    border-radius: 8px;
+    outline: none;
+    transition: all .3s ease;
+    text-align: center;
+    letter-spacing: 2px;
+}
+.input-wrap input:focus { border-color: var(--pink); box-shadow: 0 0 15px var(--pink); }
+.input-hint { font-size: 11px; color: var(--gray); margin-top: 6px; text-align: left; font-style: italic; }
+
+.host-radio-block { margin: 15px auto; max-width: 600px; text-align: left; }
+.host-radios { display: flex; gap: 20px; justify-content: center; margin: 10px 0 15px; flex-wrap: wrap; }
+.host-radios label { color: var(--white); cursor: pointer; font-size: 13px; letter-spacing: 1px; }
+.host-radios input[type=radio] { accent-color: var(--gold); margin-right: 6px; }
+.host-hint { color: var(--gray); font-size: 13px; padding: 12px; text-align: center; font-style: italic; }
+
+.check-btn {
+    padding: 16px 40px;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: bold;
+    color: var(--white);
+    background: linear-gradient(135deg, var(--red), var(--dark-pink), var(--purple));
+    border: 2px solid var(--pink);
+    border-radius: 10px;
+    cursor: pointer;
+    letter-spacing: 3px;
+    transition: all .3s ease;
+    text-transform: uppercase;
+    margin-top: 15px;
+    position: relative;
+    overflow: hidden;
+    min-width: 220px;
+}
+.check-btn::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,.3), transparent);
+    animation: shine 2s infinite;
+}
+.check-btn:hover:not(:disabled) { transform: scale(1.05); box-shadow: 0 0 30px var(--pink); }
+.check-btn:disabled { opacity: .5; cursor: not-allowed; }
+
+/* ============================================
+   PROGRESS BAR
+   ============================================ */
+.progress-wrap {
+    margin: 15px auto;
+    max-width: 500px;
+    height: 20px;
+    background: rgba(0,0,0,.5);
+    border: 2px solid var(--purple);
+    border-radius: 10px;
+    overflow: hidden;
+    display: none;
+}
+.progress-wrap.show { display: block; }
+.progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--dark-pink), var(--purple), var(--pink));
+    transition: width 0.2s;
+}
+.progress-label { color: var(--light-pink); font-size: 12px; margin-top: 6px; text-align: center; }
+
+/* ============================================
+   RESULT CARDS
+   ============================================ */
+.result-card {
+    margin: 15px 0;
+    padding: 20px;
+    border-radius: 12px;
+    border: 2px solid;
+    animation: slideIn .5s ease;
+    position: relative;
+}
+.result-card.clean, .result-card.success { border-color: var(--green); background: rgba(34,255,136,.08); box-shadow: 0 0 25px rgba(34,255,136,.3); }
+.result-card.banned, .result-card.error { border-color: var(--red); background: rgba(255,0,64,.1); box-shadow: 0 0 25px rgba(255,0,64,.3); }
+.result-card.unknown { border-color: var(--yellow); background: rgba(255,221,0,.08); }
+
+.result-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    font-size: 17px;
+    font-weight: bold;
+}
+.result-server { color: var(--light-purple); }
+.result-status { font-size: 14px; padding: 6px 16px; border-radius: 20px; font-weight: bold; }
+.result-card.clean .result-status, .result-card.success .result-status { background: rgba(34,255,136,.2); color: var(--green); }
+.result-card.banned .result-status, .result-card.error .result-status { background: rgba(255,0,64,.3); color: var(--red); }
+.result-card.unknown .result-status { background: rgba(255,221,0,.2); color: var(--yellow); }
+
+.result-detail {
+    font-size: 12px;
+    color: var(--gray);
+    padding: 8px 12px;
+    background: rgba(0,0,0,.4);
+    border-radius: 6px;
+    margin-top: 8px;
+    word-break: break-all;
+    text-align: left;
+    max-height: 120px;
+    overflow: auto;
+}
+
+/* ============================================
+   USER INFO / NAME PREVIEW
+   ============================================ */
+.user-info-card {
+    margin: 20px 0;
+    padding: 20px;
+    border-radius: 12px;
+    border: 2px solid var(--light-purple);
+    background: linear-gradient(135deg, rgba(168,85,247,.15), rgba(236,72,153,.1));
+    display: none;
+}
+.user-info-card.show { display: block; }
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    margin: 6px 0;
+    background: rgba(0,0,0,.3);
+    border-radius: 6px;
+    font-size: 14px;
+}
+.info-row .lbl { color: var(--light-purple); }
+.info-row .val { color: var(--white); font-weight: bold; word-break: break-all; text-align: right; max-width: 65%; }
+.info-row .val.highlight { color: var(--gold); font-size: 16px; }
+
+.name-preview {
+    margin: 20px 0;
+    padding: 25px;
+    border-radius: 12px;
+    border: 2px dashed var(--pink);
+    background: rgba(236,72,153,.1);
+    display: none;
+}
+.name-preview.show { display: block; }
+.name-flow {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    font-size: 18px;
+    font-weight: bold;
+}
+.name-old { padding: 12px 24px; border-radius: 8px; background: rgba(139,0,32,.3); color: var(--dark-red); border: 2px solid var(--dark-red); }
+.name-arrow { font-size: 32px; color: var(--gold); animation: arrowPulse 1s infinite alternate; }
+.name-new { padding: 12px 24px; border-radius: 8px; background: rgba(34,255,136,.15); color: var(--green); border: 2px solid var(--green); animation: newNameGlow 1.5s infinite alternate; }
+
+/* ============================================
+   INFO SECTION
+   ============================================ */
+.info-section {
+    margin: 15px 0;
+    padding: 18px 20px;
+    border: 2px solid var(--purple);
+    border-radius: 10px;
+    background: rgba(168,85,247,.08);
+    text-align: left;
+}
+.info-section-header {
+    font-size: 15px;
+    font-weight: bold;
+    color: var(--gold);
+    margin-bottom: 12px;
+    letter-spacing: 2px;
+    border-bottom: 1px dashed var(--purple);
+    padding-bottom: 8px;
+}
+.info-section .info-row { font-size: 13px; padding: 8px 12px; margin: 4px 0; }
+
+.raw-toggle {
+    padding: 10px 20px;
+    margin-top: 15px;
+    background: rgba(168,85,247,.2);
+    border: 2px solid var(--purple);
+    color: var(--white);
+    font-family: inherit;
+    font-size: 13px;
+    border-radius: 8px;
+    cursor: pointer;
+    letter-spacing: 2px;
+    font-weight: bold;
+}
+.raw-toggle:hover { background: rgba(168,85,247,.4); }
+.raw-json {
+    display: none;
+    margin-top: 10px;
+    padding: 15px;
+    background: rgba(0,0,0,.6);
+    border-radius: 8px;
+    font-size: 11px;
+    color: var(--gray);
+    text-align: left;
+    max-height: 400px;
+    overflow: auto;
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+.raw-json.show { display: block; }
+
+/* ============================================
+   LOADING OVERLAY
+   ============================================ */
+.loading-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,.85);
+    backdrop-filter: blur(5px);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.loading-overlay.show { display: flex; }
+.loading-spinner { font-size: 60px; margin-bottom: 20px; animation: spinGlow .6s infinite; }
+.loading-text { font-size: 18px; color: var(--pink); letter-spacing: 3px; }
+
+/* ============================================
+   FOOTER
+   ============================================ */
+.footer {
+    margin: 40px 0 20px;
+    padding: 20px;
+    border-top: 2px solid var(--dark-pink);
+    border-bottom: 2px solid var(--dark-pink);
+    text-align: center;
+    background: linear-gradient(135deg, rgba(139,0,32,.1), rgba(107,33,168,.1));
+}
+.footer-line { font-size: 14px; color: var(--light-pink); margin: 6px 0; }
+.footer-line.jp { color: var(--light-purple); font-weight: bold; }
+.footer-line.vip { color: var(--gold); font-weight: bold; font-size: 16px; letter-spacing: 3px; animation: glowGold 1.5s infinite alternate; }
+
+/* ============================================
+   SCROLLBAR
+   ============================================ */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: rgba(0,0,0,.3); }
+::-webkit-scrollbar-thumb { background: linear-gradient(var(--dark-pink), var(--purple)); border-radius: 4px; }
+
+/* ============================================
+   FIX LAG MODE
+   ============================================ */
+body.fix-lag-mode,
+body.fix-lag-mode *,
+body.fix-lag-mode *::before,
+body.fix-lag-mode *::after {
+    animation: none !important;
+    transition: none !important;
+    text-shadow: none !important;
+    box-shadow: none !important;
+    filter: none !important;
+    transform: none !important;
+    backdrop-filter: none !important;
+}
+body.fix-lag-mode { background: #050002 !important; }
+body.fix-lag-mode .jp-banner,
+body.fix-lag-mode .menu-card,
+body.fix-lag-mode .form-section,
+body.fix-lag-mode .result-card,
+body.fix-lag-mode .user-info-card,
+body.fix-lag-mode .info-section {
+    background: rgba(30, 5, 15, 0.6) !important;
+    background-image: none !important;
+}
+body.fix-lag-mode .jp-banner::before,
+body.fix-lag-mode .menu-card::before,
+body.fix-lag-mode .check-btn::before { display: none !important; }
+body.fix-lag-mode .menu-icon,
+body.fix-lag-mode .loading-spinner { animation: none !important; }
+body.fix-lag-mode .ascii-line { opacity: 1 !important; transition: none !important; transform: none !important; }
+
+/* ============================================
+   FIX LAG TOGGLE
+   ============================================ */
+.fl-toggle {
+    position: fixed;
+    top: 14px;
+    right: 14px;
+    padding: 8px 14px;
+    background: rgba(20, 5, 10, 0.95);
+    border: 2px solid var(--gray);
+    border-radius: 24px;
+    cursor: pointer;
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    z-index: 1100;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--gray);
+    transition: all 0.25s ease;
+    user-select: none;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.5);
+}
+.fl-toggle:hover { border-color: var(--gold); color: var(--gold); }
+.fl-toggle .fl-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: #444; transition: all 0.25s ease; flex-shrink: 0;
+}
+.fl-toggle.on {
+    border-color: var(--gold); color: var(--gold);
+    background: rgba(50, 35, 5, 0.95);
+    box-shadow: 0 0 20px rgba(255, 204, 68, 0.4);
+}
+.fl-toggle.on .fl-dot { background: var(--gold); box-shadow: 0 0 10px var(--gold); animation: dotBlink 1s infinite alternate; }
+.fl-toggle .fl-state {
+    padding: 2px 6px; background: rgba(0,0,0,0.5);
+    border-radius: 4px; font-size: 9px; letter-spacing: 1px;
+}
+.fl-toggle.on .fl-state { background: var(--gold); color: #000; }
+
+/* ============================================
+   LOG PANEL DRAGGABLE
+   ============================================ */
+.log-panel {
+    position: fixed;
+    bottom: 14px;
+    right: 14px;
+    width: 380px;
+    max-width: calc(100vw - 28px);
+    max-height: 260px;
+    background: rgba(0, 0, 0, 0.94);
+    border: 2px solid var(--purple);
+    border-radius: 10px;
+    z-index: 1050;
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.7);
+    transition: max-height 0.2s ease;
+}
+.log-panel.collapsed { max-height: 38px; }
+.log-panel.collapsed .log-body { display: none; }
+.log-panel.dragging { cursor: grabbing !important; opacity: 0.95; }
+
+.log-head {
+    padding: 8px 12px;
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.4), rgba(236, 72, 153, 0.3));
+    color: var(--white);
+    font-weight: bold;
+    letter-spacing: 1.5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: move;
+    user-select: none;
+    flex-shrink: 0;
+}
+.log-head .log-title { display: flex; align-items: center; gap: 6px; font-size: 11px; pointer-events: none; }
+.log-head .log-btn {
+    padding: 2px 8px;
+    background: rgba(0,0,0,0.4);
+    border-radius: 4px;
+    font-size: 10px;
+    letter-spacing: 1px;
+    cursor: pointer;
+}
+.log-body {
+    padding: 8px 12px;
+    overflow-y: auto;
+    flex-grow: 1;
+    min-height: 100px;
+    max-height: 220px;
+    background: rgba(0,0,0,0.5);
+    cursor: default;
+}
+.log-entry {
+    padding: 3px 0;
+    border-bottom: 1px dashed rgba(168, 85, 247, 0.15);
+    color: var(--gray);
+    word-break: break-all;
+    line-height: 1.4;
+    display: flex;
+    gap: 6px;
+}
+.log-entry .log-time { color: var(--dark-purple); flex-shrink: 0; font-size: 10px; }
+.log-entry .log-msg { flex: 1; }
+.log-entry.info { color: var(--light-purple); }
+.log-entry.success { color: var(--green); }
+.log-entry.error { color: var(--red); }
+.log-entry.warn { color: var(--yellow); }
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 600px) {
+    .server-grid { grid-template-columns: 1fr 1fr; }
+    .result-header { flex-direction: column; gap: 10px; }
+    .menu-grid { grid-template-columns: 1fr; }
+    .log-panel { width: calc(100vw - 28px); max-height: 200px; }
+    .fl-toggle { top: 8px; right: 8px; padding: 6px 10px; font-size: 10px; }
+    body { padding: 20px 20px 280px; }
+}
+</style>
+</head>
+<body>
+
+<div id="flToggle" class="fl-toggle" title="Bật/tắt Fix Lag">
+    <span class="fl-dot"></span>
+    <span class="fl-label">⚡ FIX LAG</span>
+    <span class="fl-state" id="flState">OFF</span>
+</div>
+
+<div id="logPanel" class="log-panel">
+    <div class="log-head" id="logHead">
+        <span class="log-title">📋 LOG <span style="color:var(--gray);font-weight:normal;font-size:9px">(kéo di chuyển, click ẩn/hiện)</span></span>
+        <span class="log-btn" id="logClearBtn">🗑 XOÁ</span>
+    </div>
+    <div class="log-body" id="logBody"></div>
+</div>
+
+<div class="container">
+
+    <!-- ===== ASCII PHASE 1: ANONYMOUS ===== -->
+    <div class="ascii-container" id="phase1" style="display: none;">
+        <div class="ascii-line">█████╗ ███╗   ██╗ ██████╗ ███╗   ██╗██╗   ██╗███╗   ███╗ ██████╗ ██╗   ██╗███████╗</div>
+        <div class="ascii-line">██╔══██╗████╗  ██║██╔═══██╗████╗  ██║╚██╗ ██╔╝████╗ ████║██╔═══██╗██║   ██║██╔════╝</div>
+        <div class="ascii-line">███████║██╔██╗ ██║██║   ██║██╔██╗ ██║ ╚████╔╝ ██╔████╔██║██║   ██║██║   ██║███████╗</div>
+        <div class="ascii-line">██╔══██║██║╚██╗██║██║   ██║██║╚██╗██║  ╚██╔╝  ██║╚██╔╝██║██║   ██║██║   ██║╚════██║</div>
+        <div class="ascii-line">██║  ██║██║ ╚████║╚██████╔╝██║ ╚████║   ██║   ██║ ╚═╝ ██║╚██████╔╝╚██████╔╝███████║</div>
+        <div class="ascii-line">╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚═╝  ╚═══╝   ╚═╝   ╚═╝     ╚═╝ ╚═════╝  ╚═════╝ ╚══════╝</div>
+    </div>
+
+    <!-- ===== ASCII PHASE 2: TRANSITION ===== -->
+    <div class="ascii-container" id="phase2" style="display: none;">
+        <div class="transition-text" id="transitionText">LOADING...</div>
+    </div>
+
+    <!-- ===== ASCII PHASE 3: TOOL GTD ===== -->
+    <div class="ascii-container" id="phase3" style="display: none;">
+        <div class="ascii-line">████████╗ ██████╗  ██████╗ ██╗      ██████╗ ████████╗██████╗ </div>
+        <div class="ascii-line">╚══██╔══╝██╔═══██╗██╔═══██╗██║     ██╔════╝ ╚══██╔══╝██╔══██╗</div>
+        <div class="ascii-line">   ██║   ██║   ██║██║   ██║██║     ██║  ███╗   ██║   ██║  ██║</div>
+        <div class="ascii-line">   ██║   ██║   ██║██║   ██║██║     ██║   ██║   ██║   ██║  ██║</div>
+        <div class="ascii-line">   ██║   ╚██████╔╝╚██████╔╝███████╗╚██████╔╝   ██║   ██████╔╝</div>
+        <div class="ascii-line">   ╚═╝    ╚═════╝  ╚═════╝ ╚══════╝ ╚═════╝    ╚═╝   ╚═════╝ </div>
+    </div>
+
+    <!-- ===== MENU ===== -->
+    <div class="screen" id="menuScreen">
+        <div class="jp-banner">
+            <div class="jp-title">🔥 GTD VIP TOOL v1.9 🔥</div>
+            <div class="jp-sub">✨ ブラックリスト • 名前 • ミッション • PVP • フル インフォ ✨</div>
+            <div class="jp-by">👑 作成: グエン・ダット 👑</div>
+            <div class="jp-by">🔥 by Nguyễn Đạt 🔥</div>
+        </div>
+        <div class="menu-grid">
+            <div class="menu-card" data-tool="blacklist"><div class="menu-icon">🚫</div><div class="menu-title">CHECK BLACKLIST</div><div class="menu-desc">Kiểm tra acc bị ban<br>trên 4 server</div></div>
+            <div class="menu-card" data-tool="name"><div class="menu-icon">✏️</div><div class="menu-title">HACK NAME</div><div class="menu-desc">Đổi tên hiển thị<br>trong game</div></div>
+            <div class="menu-card" data-tool="mission"><div class="menu-icon">📋</div><div class="menu-title">HACK MISSION</div><div class="menu-desc">Spam weekly mission<br>nhận thưởng liên tục</div></div>
+            <div class="menu-card" data-tool="pvp"><div class="menu-icon">⚔️</div><div class="menu-title">HACK LƯỢT PVP</div><div class="menu-desc">Set lượt PvP miễn phí<br>(chỉ cần UNIQ_ID)</div></div>
+            <div class="menu-card" data-tool="info"><div class="menu-icon">📊</div><div class="menu-title">FULL INFO ACC</div><div class="menu-desc">Toàn bộ thông tin<br>Tài nguyên • Hero • Guild</div></div>
+        </div>
+        <div class="footer">
+            <div class="footer-line">🌸 ✨ GTD VIP TOOL v1.9 by Nguyễn Đạt ✨ 🌸</div>
+            <div class="footer-line jp">ジーティーディー ツール — グエン・ダット作</div>
+            <div class="footer-line vip">🔥 VIP EDITION 🔥</div>
+        </div>
+    </div>
+
+    <!-- ===== BLACKLIST ===== -->
+    <div class="screen" id="blacklistScreen">
+        <button class="back-btn" data-back="menu">◀ BACK TO MENU</button>
+        <div class="jp-banner"><div class="jp-title">🚫 ブラックリスト チェック 🚫</div><div class="jp-sub">✨ CHECK BLACKLIST TOOL ✨</div></div>
+        <div class="form-section">
+            <div class="form-title">🎯 CHỌN SERVER</div>
+            <div class="server-grid" id="blServerGrid">
+                <button class="server-btn" data-server="AMO">AMO</button><button class="server-btn" data-server="ATV">ATV</button><button class="server-btn" data-server="LG">LG</button><button class="server-btn" data-server="SS">SS</button><button class="server-btn" data-server="ALL" style="border-color:var(--gold);color:var(--gold);">ALL</button>
+            </div>
+            <div class="input-wrap"><label class="input-label">🆔 UNIQ_ID</label><input type="text" id="blUniqId" placeholder="Nhập UNIQ_ID..." autocomplete="off"></div>
+            <button class="check-btn" id="blCheckBtn" disabled>🔥 KIỂM TRA NGAY 🔥</button>
+        </div>
+        <div id="blResults"></div>
+    </div>
+
+    <!-- ===== NAME ===== -->
+    <div class="screen" id="nameScreen">
+        <button class="back-btn" data-back="menu">◀ BACK TO MENU</button>
+        <div class="jp-banner"><div class="jp-title">✏️ 名前 ハック ✏️</div><div class="jp-sub">✨ HACK NAME TOOL ✨</div></div>
+        <div class="form-section">
+            <div class="form-title">🎯 CHỌN SERVER</div>
+            <div class="server-grid" id="nmServerGrid">
+                <button class="server-btn" data-server="AMO">AMO</button><button class="server-btn" data-server="ATV">ATV</button><button class="server-btn" data-server="LG">LG</button><button class="server-btn" data-server="SS">SS</button>
+            </div>
+            <div class="input-wrap"><label class="input-label">🆔 UNIQ_ID</label><input type="text" id="nmUniqId" placeholder="Nhập UNIQ_ID..." autocomplete="off"></div>
+            <div id="nmHostBlock"><div class="host-hint">👆 Chọn server trước</div></div>
+            <button class="check-btn" id="nmFetchBtn" disabled>📡 LẤY THÔNG TIN ACC</button>
+        </div>
+        <div class="user-info-card" id="nmUserInfo">
+            <div class="info-row"><span class="lbl">👤 Tên hiện tại</span><span class="val highlight" id="nmCurrentName">—</span></div>
+            <div class="info-row"><span class="lbl">🆙 Level</span><span class="val" id="nmCurrentLevel">—</span></div>
+            <div class="info-row"><span class="lbl">🔑 GICHAPO</span><span class="val" id="nmCurrentGichapo">—</span></div>
+            <div class="info-row"><span class="lbl">📧 USER_KEY</span><span class="val" id="nmUserKey">—</span></div>
+        </div>
+        <div class="form-section" id="nmStep3" style="display:none;">
+            <div class="form-title">✏️ NHẬP TÊN MỚI</div>
+            <div class="input-wrap"><label class="input-label">✨ TÊN MỚI</label><input type="text" id="nmNewName" placeholder="Nhập tên mới..." autocomplete="off"></div>
+            <button class="check-btn" id="nmChangeBtn" disabled>🔥 ĐỔI TÊN NGAY 🔥</button>
+        </div>
+        <div class="name-preview" id="nmPreview">
+            <div style="color:var(--light-pink);font-size:16px;margin-bottom:15px;letter-spacing:2px;text-align:center;">🎬 XEM TRƯỚC</div>
+            <div class="name-flow"><div class="name-old" id="nmPreviewOld">—</div><div class="name-arrow">➜</div><div class="name-new" id="nmPreviewNew">—</div></div>
+        </div>
+        <div id="nmResults"></div>
+    </div>
+
+    <!-- ===== MISSION ===== -->
+    <div class="screen" id="missionScreen">
+        <button class="back-btn" data-back="menu">◀ BACK TO MENU</button>
+        <div class="jp-banner"><div class="jp-title">📋 ミッション ハック 📋</div><div class="jp-sub">✨ HACK WEEKLY MISSION ✨</div></div>
+        <div class="form-section">
+            <div class="form-title">🎯 CHỌN SERVER</div>
+            <div class="server-grid" id="msServerGrid">
+                <button class="server-btn" data-server="AMO">AMO</button><button class="server-btn" data-server="ATV">ATV</button><button class="server-btn" data-server="LG">LG</button><button class="server-btn" data-server="SS">SS</button>
+            </div>
+            <div class="input-wrap"><label class="input-label">🆔 UNIQ_ID</label><input type="text" id="msUniqId" placeholder="Nhập UNIQ_ID..." autocomplete="off"></div>
+            <div id="msHostBlock"><div class="host-hint">👆 Chọn server trước</div></div>
+            <div class="input-wrap"><label class="input-label">🔢 Số lần PUT (1-500)</label><input type="number" id="msCount" placeholder="VD: 100" min="1" max="500" value="100"></div>
+            <button class="check-btn" id="msBtn" disabled>🔥 HACK MISSION 🔥</button>
+        </div>
+        <div class="progress-wrap" id="msProgressWrap"><div class="progress-bar" id="msProgressBar"></div></div>
+        <div class="progress-label" id="msProgressLabel"></div>
+        <div id="msResults"></div>
+    </div>
+
+    <!-- ===== PVP ===== -->
+    <div class="screen" id="pvpScreen">
+        <button class="back-btn" data-back="menu">◀ BACK TO MENU</button>
+        <div class="jp-banner"><div class="jp-title">⚔️ PVP ラグ ハック ⚔️</div><div class="jp-sub">✨ HACK LƯỢT PVP (AMO) ✨</div></div>
+        <div class="form-section">
+            <div class="form-title" style="color:var(--gold);">🎯 CHỈ CẦN UNIQ_ID — HỖ TRỢ AMO</div>
+            <div class="input-wrap"><label class="input-label">🆔 UNIQ_ID</label><input type="text" id="pvUniqId" placeholder="Nhập UNIQ_ID của acc AMO..." autocomplete="off"></div>
+            <div class="input-wrap"><label class="input-label">⚔️ Số lượt PVP miễn phí</label><input type="text" id="pvNum" placeholder="VD: 10, 100, 999..." autocomplete="off"></div>
+            <div class="input-hint" style="text-align:center;margin-top:10px;">💡 Không cần HOST_ID / GICHAPO — tool tự lấy từ server hoặc random</div>
+            <button class="check-btn" id="pvBtn" disabled>🔥 HACK LƯỢT PVP 🔥</button>
+        </div>
+        <div id="pvResults"></div>
+    </div>
+
+    <!-- ===== INFO ===== -->
+    <div class="screen" id="infoScreen">
+        <button class="back-btn" data-back="menu">◀ BACK TO MENU</button>
+        <div class="jp-banner"><div class="jp-title">📊 フル インフォ 📊</div><div class="jp-sub">✨ FULL ACCOUNT INFO ✨</div></div>
+        <div class="form-section">
+            <div class="form-title">🎯 CHỌN SERVER</div>
+            <div class="server-grid" id="inServerGrid">
+                <button class="server-btn" data-server="AMO">AMO</button><button class="server-btn" data-server="ATV">ATV</button><button class="server-btn" data-server="LG">LG</button><button class="server-btn" data-server="SS">SS</button>
+            </div>
+            <div class="input-wrap"><label class="input-label">🆔 UNIQ_ID</label><input type="text" id="inUniqId" placeholder="Nhập UNIQ_ID..." autocomplete="off"></div>
+            <div id="inHostBlock"><div class="host-hint">👆 Chọn server trước</div></div>
+            <button class="check-btn" id="inFetchBtn" disabled>📊 LẤY FULL INFO</button>
+        </div>
+        <div id="inResults"></div>
+    </div>
+</div>
+
+<div class="loading-overlay" id="loadingOverlay"><div class="loading-spinner" id="loadingIcon">✦</div><div class="loading-text" id="loadingText">LOADING...</div></div>
+
+<script>
+'use strict';
+
+/* ============ FIX LAG ============ */
+const FIX_LAG_KEY = 'gtd_fix_lag_mode';
+function isFixLagMode() {
+    try { if (localStorage.getItem(FIX_LAG_KEY) === '1') return true; } catch (e) {}
+    try { if (sessionStorage.getItem(FIX_LAG_KEY) === '1') return true; } catch (e) {}
+    if (location.hash === '#fixlag') return true;
+    try { if (window.name && window.name.includes('__fixlag__')) return true; } catch (e) {}
+    return false;
+}
+function enableFixLag() {
+    try { localStorage.setItem(FIX_LAG_KEY, '1'); } catch (e) {}
+    try { sessionStorage.setItem(FIX_LAG_KEY, '1'); } catch (e) {}
+    try { location.hash = 'fixlag'; } catch (e) {}
+    try { window.name = '__fixlag__'; } catch (e) {}
+}
+function disableFixLag() {
+    try { localStorage.removeItem(FIX_LAG_KEY); } catch (e) {}
+    try { sessionStorage.removeItem(FIX_LAG_KEY); } catch (e) {}
+    try { window.name = ''; } catch (e) {}
+    try { if (location.hash === '#fixlag') history.replaceState(null, '', location.pathname + location.search); } catch (e) {}
+}
+function clearAllStorage() {
+    let n = 0;
+    try { n += localStorage.length; localStorage.clear(); } catch (e) {}
+    try { n += sessionStorage.length; sessionStorage.clear(); } catch (e) {}
+    return n;
+}
+
+/* ============ LOG ============ */
+function log(level, msg) {
+    const body = document.getElementById('logBody');
+    if (!body) return;
+    const entry = document.createElement('div');
+    entry.className = 'log-entry ' + level;
+    const time = new Date().toLocaleTimeString('vi-VN', { hour12: false });
+    entry.innerHTML = `<span class="log-time">[${time}]</span><span class="log-msg">${escapeHtml(msg)}</span>`;
+    body.appendChild(entry);
+    body.scrollTop = body.scrollHeight;
+    while (body.children.length > 200) body.removeChild(body.firstChild);
+}
+
+/* ============ STATE ============ */
+const state = { blServer: null, nmServer: null, msServer: null, inServer: null, nmUserData: null };
+const delay = ms => new Promise(r => setTimeout(r, ms));
+const randIcon = () => ['✦','✧','⋆','✩','✪','💫','✨','🔥','💎','🔮','⭐','🌟','💠','🌸','✿'][Math.floor(Math.random()*15)];
+
+function escapeHtml(s) {
+    return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+}
+
+/* ============ SCREEN ============ */
+function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    const t = document.getElementById(id);
+    if (t) t.classList.add('active');
+    window.scrollTo(0, 0);
+    log('info', '→ ' + id.replace('Screen',''));
+}
+
+function hideAllAscii() {
+    ['phase1','phase2','phase3'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = 'none';
+    });
+}
+
+/* ============ SPLASH — Y HỆT CHECK BLACKLIST HTML GỐC ============ */
+async function playPhase1() {
+    document.getElementById('phase1').style.display = 'flex';
+    const container = document.getElementById('phase1');
+    const lines = container.querySelectorAll('.ascii-line');
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        await delay(150);
+        line.classList.add('visible');
+        await delay(180);
+    }
+    await delay(400);
+}
+
+async function playPhase2() {
+    document.getElementById('phase1').style.display = 'none';
+    document.getElementById('phase2').style.display = 'flex';
+    const textEl = document.getElementById('transitionText');
+    const TRANSITION_TEXTS = [
+        '✦ LOADING ✦', '💫 CONNECTING 💫', '✧ INITIALIZING ✧', '🔥 LOADING TOOL 🔥',
+        '💎 ACCESS GRANTED 💎', '⚡ WELCOME ⚡', '✨ STARTING UP ✨', '🌟 SYSTEM READY 🌟'
+    ];
+    for (let i = 0; i < 24; i++) {
+        const text = TRANSITION_TEXTS[i % TRANSITION_TEXTS.length];
+        textEl.textContent = `${randIcon()} ${text} ${randIcon()}`;
+        await delay(90);
+    }
+}
+
+async function playPhase3() {
+    document.getElementById('phase2').style.display = 'none';
+    document.getElementById('phase3').style.display = 'flex';
+    await delay(200);
+    const container = document.getElementById('phase3');
+    const lines = container.querySelectorAll('.ascii-line');
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        await delay(150);
+        line.classList.add('visible');
+        await delay(180);
+    }
+}
+
+async function playEntryAnimation() {
+    await delay(400);
+    await playPhase1();
+    await delay(600);
+    await playPhase2();
+    await delay(400);
+    await playPhase3();
+    await delay(800);
+    document.getElementById('phase3').style.display = 'none';
+    showScreen('menuScreen');
+}
+
+function startSplashFallback() {
+    window._splashFallback = setTimeout(() => {
+        if (!document.querySelector('.screen.active')) {
+            log('warn', '⚠ Fallback menu');
+            hideAllAscii();
+            showScreen('menuScreen');
+        }
+    }, 15000);
+}
+function cancelSplashFallback() {
+    if (window._splashFallback) { clearTimeout(window._splashFallback); window._splashFallback = null; }
+}
+
+/* ============ HOST BLOCK ============ */
+function renderHostBlock(containerId, prefix) {
+    const c = document.getElementById(containerId);
+    if (!c) return;
+    const sv = state[prefix + 'Server'];
+    if (sv === 'AMO') {
+        c.innerHTML = `<div class="input-wrap"><label class="input-label">📧 HOST_ID (Email)</label><input type="text" id="${prefix}HostEmailOnly" placeholder="Nhập email AMO..." autocomplete="off"></div>`;
+    } else if (['ATV', 'LG', 'SS'].includes(sv)) {
+        c.innerHTML = `
+            <div class="host-radio-block">
+                <label class="input-label">📧 Kiểu HOST_ID (${sv})</label>
+                <div class="host-radios">
+                    <label><input type="radio" name="${prefix}HostType" value="amo-link" checked> 🔗 Kết nối AMO</label>
+                    <label><input type="radio" name="${prefix}HostType" value="email"> 📧 Email gốc</label>
+                </div>
+                <div class="input-wrap" id="${prefix}HostAmoWrap">
+                    <input type="text" id="${prefix}HostAmo" placeholder="Nhập ID AMO đã kết nối (VD: TDM266287tvZ)..." autocomplete="off">
+                </div>
+                <div class="input-wrap" id="${prefix}HostEmailWrap" style="display:none">
+                    <input type="text" id="${prefix}HostEmail" placeholder="Nhập email gốc của acc TV..." autocomplete="off">
+                </div>
+            </div>`;
+        c.querySelectorAll(`input[name="${prefix}HostType"]`).forEach(r => {
+            r.addEventListener('change', () => {
+                const v = r.value;
+                const amoW = document.getElementById(prefix + 'HostAmoWrap');
+                const emW = document.getElementById(prefix + 'HostEmailWrap');
+                if (amoW) amoW.style.display = v === 'amo-link' ? 'block' : 'none';
+                if (emW) emW.style.display = v === 'email' ? 'block' : 'none';
+            });
+        });
+    } else {
+        c.innerHTML = `<div class="host-hint">👆 Chọn server trước</div>`;
+    }
+}
+
+function getHostId(prefix) {
+    const sv = state[prefix + 'Server'];
+    if (sv === 'AMO') {
+        const e = (document.getElementById(prefix + 'HostEmailOnly')?.value || '').trim();
+        return e || 'gibongtran@gmail.com';
+    }
+    if (['ATV', 'LG', 'SS'].includes(sv)) {
+        const t = document.querySelector(`input[name="${prefix}HostType"]:checked`);
+        const type = t ? t.value : 'amo-link';
+        if (type === 'amo-link') {
+            const id = (document.getElementById(prefix + 'HostAmo')?.value || '').trim();
+            if (!id) return null;
+            return `[연동]${id},[비번]undefined`;
+        } else {
+            const e = (document.getElementById(prefix + 'HostEmail')?.value || '').trim();
+            return e || null;
+        }
+    }
+    return null;
+}
+
+/* ============ NAV ============ */
+function bindNav() {
+    document.querySelectorAll('.menu-card').forEach(card => {
+        card.addEventListener('click', () => {
+            const t = card.dataset.tool;
+            if (t === 'blacklist') showScreen('blacklistScreen');
+            else if (t === 'name') showScreen('nameScreen');
+            else if (t === 'mission') showScreen('missionScreen');
+            else if (t === 'pvp') showScreen('pvpScreen');
+            else if (t === 'info') showScreen('infoScreen');
+        });
+    });
+    document.querySelectorAll('.back-btn').forEach(b => b.addEventListener('click', () => showScreen('menuScreen')));
+}
+
+/* ============ GRID BIND ============ */
+function bindGrid(gridId, stateKey, btnId, inputId, hostBlockId, prefix) {
+    const grid = document.getElementById(gridId);
+    const btn = document.getElementById(btnId);
+    const inp = document.getElementById(inputId);
+    if (!grid || !btn || !inp) return;
+    grid.querySelectorAll('.server-btn').forEach(b => {
+        b.addEventListener('click', () => {
+            grid.querySelectorAll('.server-btn').forEach(x => x.classList.remove('active'));
+            b.classList.add('active');
+            state[stateKey] = b.dataset.server;
+            btn.disabled = !(inp.value.trim() && state[stateKey]);
+            log('info', `→ Server ${b.dataset.server}`);
+            if (hostBlockId) renderHostBlock(hostBlockId, prefix);
+        });
+    });
+    inp.addEventListener('input', () => { btn.disabled = !(inp.value.trim() && state[stateKey]); });
+}
+
+/* ============ LOADING ============ */
+function showLoading(t) {
+    const o = document.getElementById('loadingOverlay'), l = document.getElementById('loadingText');
+    if (o) o.classList.add('show');
+    if (l) l.textContent = t || 'LOADING...';
+}
+function hideLoading() {
+    const o = document.getElementById('loadingOverlay');
+    if (o) o.classList.remove('show');
+}
+
+/* ============ BLACKLIST ============ */
+async function checkBlacklist() {
+    const uniq = document.getElementById('blUniqId').value.trim();
+    if (!uniq || !state.blServer) return;
+    log('info', `→ Check: ${uniq} | ${state.blServer}`);
+    const servers = state.blServer === 'ALL' ? ['AMO','ATV','LG','SS'] : [state.blServer];
+    const rd = document.getElementById('blResults');
+    rd.innerHTML = '';
+    const btn = document.getElementById('blCheckBtn');
+    btn.disabled = true;
+    btn.textContent = '⏳ ĐANG CHECK...';
+    for (const sv of servers) {
+        try {
+            const res = await fetch('/proxy/check_blacklist', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({ UNIQ_ID: uniq, PLATFORM: sv }).toString()
+            });
+            const data = await res.json();
+            const st = data.status || 'error';
+            log(st === 'clean' ? 'success' : (st === 'banned' ? 'error' : 'warn'), `${sv}: ${data.label || data.error || 'LỖI'}`);
+            const card = document.createElement('div');
+            card.className = `result-card ${st}`;
+            card.innerHTML = `<div class="result-header"><span class="result-server">🖥 ${sv}</span><span class="result-status">${escapeHtml(data.label || data.error || '❌ LỖI')}</span></div>${data.detail?`<div class="result-detail">${escapeHtml(data.detail)}</div>`:''}${data.raw?`<div class="result-detail">RAW: ${escapeHtml(String(data.raw).substring(0,200))}</div>`:''}`;
+            rd.appendChild(card);
+        } catch (e) {
+            log('error', `${sv}: ${e.message}`);
+            const card = document.createElement('div');
+            card.className = 'result-card error';
+            card.innerHTML = `<div class="result-header"><span class="result-server">🖥 ${sv}</span><span class="result-status">❌ LỖI</span></div><div class="result-detail">${escapeHtml(e.message)}</div>`;
+            rd.appendChild(card);
+        }
+        await delay(100);
+    }
+    btn.disabled = false;
+    btn.textContent = '🔥 KIỂM TRA NGAY 🔥';
+    log('success', '✓ Hoàn tất');
+}
+
+/* ============ NAME ============ */
+async function nmFetchData() {
+    const uniq = document.getElementById('nmUniqId').value.trim();
+    if (!uniq || !state.nmServer) return;
+    const host = getHostId('nm');
+    if (!host) { alert('⚠ Chưa nhập HOST_ID!'); log('error', '✗ HOST_ID trống'); return; }
+    log('info', `→ Lấy info: ${uniq} | ${state.nmServer}`);
+    const fetchBtn = document.getElementById('nmFetchBtn');
+    fetchBtn.disabled = true;
+    fetchBtn.textContent = '⏳ ĐANG LẤY...';
+    document.getElementById('nmResults').innerHTML = '';
+    document.getElementById('nmUserInfo').classList.remove('show');
+    document.getElementById('nmStep3').style.display = 'none';
+    document.getElementById('nmPreview').classList.remove('show');
+    try {
+        const res = await fetch('/proxy/get_user_data', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({ UNIQ_ID: uniq, HOST_ID: host, PLATFORM: state.nmServer }).toString()
+        });
+        const data = await res.json();
+        if (data.error || data.ok === false) throw new Error(data.detail || data.error || 'Lỗi data');
+        if (!data.normal || !data.normal.userName) throw new Error('Cấu trúc sai');
+
+        state.nmUserData = {
+            uniqId: uniq, hostId: host, platform: state.nmServer,
+            userName: data.normal.userName,
+            level: data.normal.level || 1,
+            gichapo: data.gichapo || '',
+            hasUserKey: data.hasUserKey || ''
+        };
+        log('success', `✓ ${state.nmUserData.userName} (Lv ${state.nmUserData.level})`);
+        document.getElementById('nmCurrentName').textContent = state.nmUserData.userName;
+        document.getElementById('nmCurrentLevel').textContent = state.nmUserData.level;
+        document.getElementById('nmCurrentGichapo').textContent = state.nmUserData.gichapo || '(không có)';
+        document.getElementById('nmUserKey').textContent = state.nmUserData.hasUserKey || '(chưa liên kết)';
+        document.getElementById('nmUserInfo').classList.add('show');
+        document.getElementById('nmStep3').style.display = 'block';
+        document.getElementById('nmNewName').value = '';
+        document.getElementById('nmNewName').focus();
+
+        const card = document.createElement('div');
+        card.className = 'result-card success';
+        card.innerHTML = `<div class="result-header"><span class="result-server">✅ ${state.nmServer}</span><span class="result-status">THÀNH CÔNG</span></div><div class="result-detail" style="color:var(--green);">👤 ${escapeHtml(state.nmUserData.userName)} • 🆙 Lv ${state.nmUserData.level}</div>`;
+        document.getElementById('nmResults').appendChild(card);
+    } catch (e) {
+        log('error', '✗ ' + e.message);
+        const card = document.createElement('div');
+        card.className = 'result-card error';
+        card.innerHTML = `<div class="result-header"><span class="result-server">❌ ${state.nmServer}</span><span class="result-status">THẤT BẠI</span></div><div class="result-detail" style="white-space:pre-wrap;">${escapeHtml(e.message)}</div><div class="result-detail" style="color:var(--yellow);">💡 Thử HOST_ID khác hoặc kiểm tra server/UNIQ_ID.</div>`;
+        document.getElementById('nmResults').appendChild(card);
+    } finally {
+        fetchBtn.disabled = false;
+        fetchBtn.textContent = '📡 LẤY THÔNG TIN ACC';
+    }
+}
+
+function updatePreview() {
+    if (!state.nmUserData) return;
+    const nn = document.getElementById('nmNewName').value.trim();
+    const pv = document.getElementById('nmPreview');
+    if (nn && nn !== state.nmUserData.userName) {
+        document.getElementById('nmPreviewOld').textContent = state.nmUserData.userName;
+        document.getElementById('nmPreviewNew').textContent = nn;
+        pv.classList.add('show');
+    } else pv.classList.remove('show');
+}
+
+async function nmChangeName() {
+    if (!state.nmUserData) return;
+    const nn = document.getElementById('nmNewName').value.trim();
+    if (!nn || nn === state.nmUserData.userName) { alert('⚠ Tên không hợp lệ!'); return; }
+    if (!confirm(`❓ Đổi:\n"${state.nmUserData.userName}" → "${nn}"?`)) return;
+    log('info', `→ Đổi tên → "${nn}"`);
+    const btn = document.getElementById('nmChangeBtn');
+    btn.disabled = true;
+    btn.textContent = '⏳ ĐANG ĐỔI...';
+    const rd = document.getElementById('nmResults');
+    rd.innerHTML = '';
+    try {
+        const res = await fetch('/proxy/change_name', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({
+                UNIQ_ID: state.nmUserData.uniqId,
+                NEW_NAME: nn,
+                OLD_NAME: state.nmUserData.userName,
+                PLATFORM: state.nmUserData.platform,
+                GICHAPO: state.nmUserData.gichapo
+            }).toString()
+        });
+        const data = await res.json();
+        const rawLower = String(data.raw || '').toLowerCase();
+        const isOk = rawLower.includes('"result":"ok"') || rawLower.includes('success') || rawLower.includes('성공');
+        const isFail = rawLower.includes('error') || rawLower.includes('fail') || rawLower.includes('중복');
+        const card = document.createElement('div');
+        if (isOk && !isFail) {
+            log('success', `✓ OK: "${state.nmUserData.userName}" → "${nn}"`);
+            card.className = 'result-card success';
+            card.innerHTML = `<div class="result-header"><span class="result-server">✏️ ${state.nmUserData.platform}</span><span class="result-status">✅ THÀNH CÔNG</span></div><div class="result-detail" style="color:var(--green);">🎉 "${escapeHtml(state.nmUserData.userName)}" ➜ "${escapeHtml(nn)}"</div><div class="result-detail">RAW: ${escapeHtml(String(data.raw || '').substring(0,200))}</div>`;
+        } else {
+            log('error', `✗ Fail`);
+            card.className = 'result-card error';
+            card.innerHTML = `<div class="result-header"><span class="result-server">✏️ ${state.nmUserData.platform}</span><span class="result-status">❌ THẤT BẠI</span></div><div class="result-detail">RAW: ${escapeHtml(String(data.raw || '').substring(0,200))}</div>`;
+        }
+        rd.appendChild(card);
+    } catch (e) {
+        log('error', '✗ ' + e.message);
+        const card = document.createElement('div');
+        card.className = 'result-card error';
+        card.innerHTML = `<div class="result-header"><span class="result-status">❌ LỖI</span></div><div class="result-detail">${escapeHtml(e.message)}</div>`;
+        rd.appendChild(card);
+    } finally {
+        btn.disabled = false;
+        btn.textContent = '🔥 ĐỔI TÊN NGAY 🔥';
+    }
+}
+
+/* ============ MISSION ============ */
+async function runMission() {
+    const uniq = document.getElementById('msUniqId').value.trim();
+    if (!uniq || !state.msServer) return;
+    const host = getHostId('ms');
+    if (!host) { alert('⚠ Chưa nhập HOST_ID!'); return; }
+    const count = parseInt(document.getElementById('msCount').value) || 100;
+    if (count < 1 || count > 500) { alert('⚠ 1-500!'); return; }
+
+    log('info', `→ Mission: ${uniq} | ${state.msServer} | ${count}`);
+    const btn = document.getElementById('msBtn');
+    btn.disabled = true;
+    btn.textContent = '⏳ ĐANG CHẠY...';
+    document.getElementById('msResults').innerHTML = '';
+
+    let gichapo = '';
+    try {
+        const res = await fetch('/proxy/get_user_data', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({ UNIQ_ID: uniq, HOST_ID: host, PLATFORM: state.msServer }).toString()
+        });
+        const data = await res.json();
+        if (data.error || data.ok === false) throw new Error(data.detail || data.error || 'Lỗi GICHAPO');
+        gichapo = data.gichapo || '';
+        if (!gichapo) throw new Error('Không có GICHAPO');
+        log('success', `✓ GICHAPO: ${gichapo}`);
+    } catch (e) {
+        log('error', '✗ ' + e.message);
+        alert('❌ ' + e.message);
+        btn.disabled = false;
+        btn.textContent = '🔥 HACK MISSION 🔥';
+        return;
+    }
+
+    const pw = document.getElementById('msProgressWrap');
+    const pb = document.getElementById('msProgressBar');
+    const pl = document.getElementById('msProgressLabel');
+    pw.classList.add('show');
+    pb.style.width = '0%';
+    pl.textContent = `0 / ${count}`;
+
+    let ok = 0, fail = 0;
+    const startTime = Date.now();
+    for (let i = 1; i <= count; i++) {
+        try {
+            const res = await fetch('/proxy/hack_mission', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({
+                    UNIQ_ID: uniq, HOST_ID: host, PLATFORM: state.msServer,
+                    GICHAPO: gichapo, I: String(i)
+                }).toString()
+            });
+            const data = await res.json();
+            const low = String(data.raw || '').toLowerCase();
+            if (low.includes('"result":"ok"') || low.includes('success') || low.includes('성공') || (low.length > 5 && !low.includes('error'))) ok++;
+            else fail++;
+        } catch (e) { fail++; }
+        const pct = Math.round((i / count) * 100);
+        pb.style.width = pct + '%';
+        pl.textContent = `${i} / ${count} — ✓ ${ok} | ✗ ${fail}`;
+        if (i % 5 === 0) log('info', `  ${i}/${count} | ✓${ok} ✗${fail}`);
+        await delay(120);
+    }
+
+    const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+    log('success', `✓ Mission: ${ok}/${count} trong ${elapsed}s`);
+    const card = document.createElement('div');
+    card.className = ok === count ? 'result-card success' : (ok > 0 ? 'result-card unknown' : 'result-card error');
+    card.innerHTML = `<div class="result-header"><span class="result-server">📋 ${state.msServer}</span><span class="result-status">${ok === count ? '✅ HOÀN TẤT' : '⚠ CÓ LỖI'}</span></div><div class="result-detail" style="color:var(--green);">✓ ${ok}/${count}</div><div class="result-detail" style="color:var(--red);">✗ ${fail}</div><div class="result-detail" style="color:var(--yellow);">⏱ ${elapsed}s</div>`;
+    document.getElementById('msResults').appendChild(card);
+    btn.disabled = false;
+    btn.textContent = '🔥 HACK MISSION 🔥';
+}
+
+/* ============ PVP ============ */
+async function runPvp() {
+    const uniq = document.getElementById('pvUniqId').value.trim();
+    const num = document.getElementById('pvNum').value.trim();
+    if (!uniq) { alert('⚠ UNIQ_ID trống!'); return; }
+    if (!num) { alert('⚠ Số lượt trống!'); return; }
+
+    log('info', `→ PVP: ${uniq} | ${num} lượt`);
+    const btn = document.getElementById('pvBtn');
+    btn.disabled = true;
+    btn.textContent = '⏳ ĐANG CHẠY...';
+    document.getElementById('pvResults').innerHTML = '';
+    showLoading('⚔️ Đang set lượt PVP...');
+
+    try {
+        const res = await fetch('/proxy/hack_pvp', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({ UNIQ_ID: uniq, FREE_ENTERANCE_NUM: num }).toString()
+        });
+        const data = await res.json();
+        const low = String(data.raw || '').toLowerCase();
+        const ok = low.includes('"result":"ok"') || low.includes('ok');
+        log(ok ? 'success' : 'warn', ok ? `✓ PVP ${num} lượt | GIC: ${data.gichapo || 'N/A'} (${data.source || '?'})` : `⚠ PVP: ${low.substring(0,60)}`);
+        const card = document.createElement('div');
+        card.className = ok ? 'result-card success' : 'result-card error';
+        card.innerHTML = `
+            <div class="result-header"><span class="result-server">⚔️ AMO</span><span class="result-status">${ok ? '✅ THÀNH CÔNG' : '❌ THẤT BẠI'}</span></div>
+            <div class="result-detail" style="color:var(--green);">🎯 Lượt PVP: ${escapeHtml(num)}</div>
+            <div class="result-detail" style="color:var(--light-purple);">🔑 GICHAPO: ${escapeHtml(data.gichapo || 'N/A')} ${data.source ? '(' + data.source + ')' : ''}</div>
+            <div class="result-detail">RAW: ${escapeHtml(String(data.raw || '').substring(0, 200))}</div>
+        `;
+        document.getElementById('pvResults').appendChild(card);
+    } catch (e) {
+        log('error', '✗ ' + e.message);
+        const card = document.createElement('div');
+        card.className = 'result-card error';
+        card.innerHTML = `<div class="result-header"><span class="result-status">❌ LỖI</span></div><div class="result-detail">${escapeHtml(e.message)}</div>`;
+        document.getElementById('pvResults').appendChild(card);
+    } finally {
+        hideLoading();
+        btn.disabled = false;
+        btn.textContent = '🔥 HACK LƯỢT PVP 🔥';
+    }
+}
+
+/* ============ INFO ============ */
+function formatNum(n) { return Number(n || 0).toLocaleString('vi-VN'); }
+function renderInfoSection(title, rows) {
+    return `<div class="info-section"><div class="info-section-header">${title}</div>${rows.map(r=>`<div class="info-row"><span class="lbl">${r[0]}</span><span class="val ${r[2]==='highlight'?'highlight':''}">${escapeHtml(r[1])}</span></div>`).join('')}</div>`;
+}
+function renderFullInfo(data) {
+    const c = document.getElementById('inResults');
+    const rawId = 'raw-' + Date.now();
+    c.innerHTML = `
+        <div class="result-card success" style="border-color:var(--light-purple);">
+            <div class="result-header"><span class="result-server">📊 ${escapeHtml(data.normal?.userName||'???')}</span><span class="result-status" style="background:rgba(196,181,253,.2);color:var(--light-purple);">🆔 ${escapeHtml(data.hasUserKey||'chưa liên kết')}</span></div>
+            <div class="result-detail">GICHAPO: ${escapeHtml(data.gichapo||'—')}</div>
+        </div>
+        ${renderInfoSection('👤 BASIC INFO', [['👤 Tên', data.normal?.userName||'—','highlight'],['🆙 Level', formatNum(data.normal?.level),'highlight'],['⭐ EXP', formatNum(data.normal?.levelExp)],['🌐 LANG', String(data.normal?.lang)],['🏳 COUNTRY', data.normal?.country||'—'],['📱 MODEL', data.normal?.modelName||'—']])}
+        ${renderInfoSection('💰 RESOURCES', [['💎 RUBY', formatNum(data.resources?.ruby),'highlight'],['💠 DIA', formatNum(data.resources?.dia),'highlight'],['🟡 GOLD', formatNum(data.resources?.gold),'highlight'],['🔮 MAGIC', formatNum(data.resources?.magic),'highlight'],['🎫 MILEAGE', formatNum(data.resources?.mileage),'highlight']])}
+        ${renderInfoSection('🎮 PROGRESS', [['🔄 RUN_COUNT', formatNum(data.run?.runCount)],['🎮 EASY',(data.stage?.dataEasy||'').split(',').filter(x=>x==='A'||x==='C').length+' / 200'],['🎮 NORMAL',(data.stage?.dataNormal||'').split(',').filter(x=>x==='C').length+' / 200'],['🎮 HARD',(data.stage?.dataHard||'').split(',').filter(x=>x==='C').length+' / 200']])}
+        ${renderInfoSection('🏰 GUILD', [['🏰 Bang', data.guild?.name||'(chưa vào)','highlight'],['🆔 ID Bang', data.guild?.bunho||'—'],['💯 Điểm War', formatNum(data.guild?.score)]])}
+        ${renderInfoSection('⚙️ UPGRADE', [['⚔️ Ap/Thiên/Khoáng', data.upgrade||'0,0,0']])}
+        <button class="raw-toggle" id="${rawId}">📄 XEM RAW JSON</button>
+        <div class="raw-json" id="${rawId}-json">${escapeHtml(JSON.stringify(data.raw, null, 2))}</div>
+    `;
+    const btn = document.getElementById(rawId), json = document.getElementById(rawId + '-json');
+    if (btn && json) btn.addEventListener('click', () => {
+        const s = json.classList.toggle('show');
+        btn.textContent = s ? '📄 ẨN RAW JSON' : '📄 XEM RAW JSON';
+    });
+}
+async function fetchFullInfo() {
+    const uniq = document.getElementById('inUniqId').value.trim();
+    if (!uniq || !state.inServer) return;
+    const host = getHostId('in');
+    if (!host) { alert('⚠ Chưa nhập HOST_ID!'); return; }
+    log('info', `→ Full info: ${uniq} | ${state.inServer}`);
+    const btn = document.getElementById('inFetchBtn');
+    btn.disabled = true;
+    btn.textContent = '⏳ ĐANG LẤY...';
+    document.getElementById('inResults').innerHTML = '';
+    try {
+        const res = await fetch('/proxy/get_user_data', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({ UNIQ_ID: uniq, HOST_ID: host, PLATFORM: state.inServer }).toString()
+        });
+        const data = await res.json();
+        if (data.error || data.ok === false) throw new Error(data.detail || data.error || 'Lỗi');
+        renderFullInfo(data);
+        log('success', `✓ ${data.normal?.userName}`);
+    } catch (e) {
+        log('error', '✗ ' + e.message);
+        const card = document.createElement('div');
+        card.className = 'result-card error';
+        card.innerHTML = `<div class="result-header"><span class="result-server">📊 ${state.inServer}</span><span class="result-status">❌ LỖI</span></div><div class="result-detail" style="white-space:pre-wrap;">${escapeHtml(e.message)}</div>`;
+        document.getElementById('inResults').appendChild(card);
+    } finally {
+        btn.disabled = false;
+        btn.textContent = '📊 LẤY FULL INFO';
+    }
+}
+
+/* ============ FIX LAG TOGGLE ============ */
+function updateFlToggleUI() {
+    const toggle = document.getElementById('flToggle'), stateEl = document.getElementById('flState');
+    if (!toggle) return;
+    const on = isFixLagMode();
+    toggle.classList.toggle('on', on);
+    if (stateEl) stateEl.textContent = on ? 'ON' : 'OFF';
+}
+function bindFlToggle() {
+    const toggle = document.getElementById('flToggle');
+    if (!toggle) return;
+    updateFlToggleUI();
+    toggle.addEventListener('click', () => {
+        if (isFixLagMode()) {
+            log('warn', '🔴 Tắt Fix Lag');
+            disableFixLag();
+            log('success', '✓ Reload');
+            setTimeout(() => location.reload(), 500);
+        } else {
+            log('info', '⚡ Bật Fix Lag');
+            clearAllStorage();
+            enableFixLag();
+            log('success', '✓ Reload');
+            setTimeout(() => location.reload(), 500);
+        }
+    });
+}
+
+/* ============ LOG DRAG ============ */
+function bindLogPanel() {
+    const panel = document.getElementById('logPanel'), head = document.getElementById('logHead'), clearBtn = document.getElementById('logClearBtn');
+    if (!panel || !head) return;
+    let drag = false, moved = false, sx, sy, ox, oy;
+    const start = (x, y) => {
+        drag = true; moved = false; sx = x; sy = y;
+        const r = panel.getBoundingClientRect();
+        ox = x - r.left; oy = y - r.top;
+    };
+    const move = (x, y) => {
+        if (!drag) return;
+        const dx = x - sx, dy = y - sy;
+        if (Math.abs(dx) > 4 || Math.abs(dy) > 4) moved = true;
+        if (moved) {
+            let nl = Math.max(0, Math.min(x - ox, window.innerWidth - panel.offsetWidth));
+            let nt = Math.max(0, Math.min(y - oy, window.innerHeight - panel.offsetHeight));
+            panel.style.left = nl + 'px'; panel.style.top = nt + 'px';
+            panel.style.right = 'auto'; panel.style.bottom = 'auto';
+            panel.classList.add('dragging');
+        }
+    };
+    const end = () => {
+        if (drag && !moved) {
+            panel.classList.toggle('collapsed');
+            log('info', panel.classList.contains('collapsed') ? '→ Log ẩn' : '→ Log hiện');
+        }
+        drag = false; moved = false; panel.classList.remove('dragging');
+    };
+    head.addEventListener('mousedown', (e) => { if (clearBtn.contains(e.target)) return; start(e.clientX, e.clientY); e.preventDefault(); });
+    document.addEventListener('mousemove', (e) => { if (drag) move(e.clientX, e.clientY); });
+    document.addEventListener('mouseup', () => { if (drag) end(); });
+    head.addEventListener('touchstart', (e) => { if (clearBtn.contains(e.target)) return; const t = e.touches[0]; start(t.clientX, t.clientY); }, { passive: true });
+    document.addEventListener('touchmove', (e) => { if (drag) { const t = e.touches[0]; move(t.clientX, t.clientY); } }, { passive: true });
+    document.addEventListener('touchend', () => { if (drag) end(); });
+    if (clearBtn) {
+        clearBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const b = document.getElementById('logBody');
+            if (b) b.innerHTML = '';
+            log('info', '🗑 Xoá log');
+        });
+        clearBtn.addEventListener('mousedown', (e) => e.stopPropagation());
+        clearBtn.addEventListener('touchstart', (e) => e.stopPropagation());
+    }
+}
+
+/* ============ BIND ALL ============ */
+function bindAllEvents() {
+    try { bindNav(); } catch (e) { log('error', e.message); }
+    try {
+        bindGrid('blServerGrid', 'blServer', 'blCheckBtn', 'blUniqId', null, null);
+        bindGrid('nmServerGrid', 'nmServer', 'nmFetchBtn', 'nmUniqId', 'nmHostBlock', 'nm');
+        bindGrid('msServerGrid', 'msServer', 'msBtn', 'msUniqId', 'msHostBlock', 'ms');
+        bindGrid('inServerGrid', 'inServer', 'inFetchBtn', 'inUniqId', 'inHostBlock', 'in');
+    } catch (e) { log('error', e.message); }
+
+    try {
+        const nn = document.getElementById('nmNewName');
+        if (nn) nn.addEventListener('input', () => {
+            const b = document.getElementById('nmChangeBtn');
+            if (b) b.disabled = !(nn.value.trim() && state.nmUserData);
+            updatePreview();
+        });
+    } catch (e) {}
+
+    try { document.getElementById('blCheckBtn')?.addEventListener('click', checkBlacklist); } catch (e) {}
+    try {
+        document.getElementById('nmFetchBtn')?.addEventListener('click', nmFetchData);
+        document.getElementById('nmChangeBtn')?.addEventListener('click', nmChangeName);
+    } catch (e) {}
+    try { document.getElementById('msBtn')?.addEventListener('click', runMission); } catch (e) {}
+    try { document.getElementById('inFetchBtn')?.addEventListener('click', fetchFullInfo); } catch (e) {}
+
+    try {
+        const pvU = document.getElementById('pvUniqId');
+        const pvN = document.getElementById('pvNum');
+        const pvB = document.getElementById('pvBtn');
+        const updatePv = () => { pvB.disabled = !(pvU.value.trim() && pvN.value.trim()); };
+        pvU.addEventListener('input', updatePv);
+        pvN.addEventListener('input', updatePv);
+        pvB.addEventListener('click', runPvp);
+    } catch (e) {}
+
+    try { bindFlToggle(); } catch (e) {}
+    try { bindLogPanel(); } catch (e) {}
+}
+
+/* ============ INIT ============ */
+async function init() {
+    if (isFixLagMode()) {
+        try { document.body.classList.add('fix-lag-mode'); } catch (e) {}
+        updateFlToggleUI();
+        hideAllAscii();
+        showScreen('menuScreen');
+        bindAllEvents();
+        log('success', '⚡ Fix Lag ON');
+        return;
+    }
+    updateFlToggleUI();
+    bindAllEvents();
+    log('info', '🚀 GTD Tool v1.9');
+    startSplashFallback();
+    await playEntryAnimation();
+    cancelSplashFallback();
+    log('success', '✓ Ready');
+}
+
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+else init();
+</script>
+</body>
+</html>

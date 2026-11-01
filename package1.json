@@ -1,0 +1,16 @@
+{
+  "name": "gtd-vip-tool",
+  "version": "1.9.0",
+  "description": "GTD VIP Tool — Check Blacklist + Hack Name + Hack Mission + Hack PVP + Full Info",
+  "main": "proxy.js",
+  "scripts": {
+    "start": "node proxy.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": ["gtd", "tool", "towerdefense", "proxy"],
+  "author": "Nguyễn Đạt",
+  "license": "MIT",
+  "dependencies": {}
+}
