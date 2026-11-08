@@ -1,9 +1,0 @@
-{
-  "name": "gtd-sakura-web-006",
-  "version": "9.0.0",
-  "description": "GTD Sakura Web Tool - by Nguyễn Đạt (006)",
-  "main": "api6.js",
-  "scripts": { "start": "node api6.js" },
-  "engines": { "node": ">=18.0.0" },
-  "dependencies": {}
-}
