@@ -1,0 +1,1508 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌸 SAKURA TOOL v4 - by 006 🌸</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+    --pink: #ff7f9d;
+    --pink-soft: #ffb8c8;
+    --purple: #b266ff;
+    --purple-mid: #6b1e6e;
+    --blue: #4fc3f7;
+    --blue-soft: #81d4fa;
+    --yellow: #ffd700;
+    --yellow-soft: #ffe57f;
+    --white: #ffffff;
+    --text-soft: #e0d0e8;
+    --bg: linear-gradient(135deg, #14051a 0%, #240a26 40%, #330c24 70%, #20051a 100%);
+    --card-bg: linear-gradient(160deg, rgba(74,14,78,0.92), rgba(42,10,46,0.96));
+    --border: rgba(178,102,255,0.4);
+    --border-strong: rgba(178,102,255,0.7);
+    --glow-pink: rgba(255,127,157,0.4);
+    --glow-purple: rgba(178,102,255,0.4);
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, 'Yu Gothic', sans-serif;
+    background: var(--bg);
+    color: var(--text-soft);
+    min-height: 100vh;
+    overflow-x: hidden;
+    padding-top: 65px;
+}
+
+/* ========== SAKURA PETALS ========== */
+.sakura-container {
+    position: fixed; top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    pointer-events: none; overflow: hidden; z-index: 1;
+}
+.petal {
+    position: absolute; top: -40px; font-size: 20px; opacity: 0.8;
+    animation: fall linear infinite;
+    filter: drop-shadow(0 0 5px var(--pink));
+}
+@keyframes fall {
+    0% { transform: translateY(-40px) rotate(0deg) translateX(0); }
+    50% { transform: translateY(50vh) rotate(180deg) translateX(60px); }
+    100% { transform: translateY(110vh) rotate(360deg) translateX(-40px); }
+}
+body.fix-lag .petal { display: none !important; }
+body.fix-lag *, body.fix-lag *::before, body.fix-lag *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+}
+body.fix-lag .header h1 { animation: none !important; }
+
+/* ========== TOP BAR ========== */
+.top-bar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 14px;
+    background: linear-gradient(180deg, rgba(20,5,26,0.95) 0%, rgba(20,5,26,0.7) 70%, transparent 100%);
+    flex-wrap: wrap; gap: 8px;
+}
+.top-left, .top-right { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.mini-btn {
+    padding: 7px 12px;
+    border: 1.5px solid var(--purple);
+    border-radius: 18px;
+    background: linear-gradient(135deg, rgba(74,14,78,0.9), rgba(42,10,46,0.9));
+    color: var(--text-soft);
+    font-weight: 800; font-size: 11.5px;
+    cursor: pointer; font-family: inherit;
+    transition: all 0.2s; letter-spacing: 0.4px;
+}
+.mini-btn:hover {
+    background: var(--pink);
+    box-shadow: 0 0 18px var(--pink);
+    transform: scale(1.05); color: #fff;
+}
+
+/* ========== HEADER ========== */
+.header {
+    text-align: center; padding: 25px 20px 18px;
+    position: relative; z-index: 5;
+}
+.header h1 {
+    font-size: clamp(24px, 5vw, 42px); font-weight: 900;
+    background: linear-gradient(90deg, var(--pink), var(--purple), var(--blue), var(--yellow), var(--pink));
+    background-size: 300% 100%;
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: textShimmer 5s linear infinite;
+    letter-spacing: 3px;
+    filter: drop-shadow(0 0 18px var(--glow-pink));
+}
+@keyframes textShimmer {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 300% 50%; }
+}
+.header p {
+    color: var(--pink-soft); font-size: 12px;
+    letter-spacing: 4px; margin-top: 8px;
+    opacity: 0.85; font-weight: 600;
+}
+
+/* ========== FIXED ACC ========== */
+.fixed-acc {
+    max-width: 1200px; margin: 0 auto 22px; padding: 12px 18px;
+    background: rgba(0,0,0,0.4);
+    border: 1.5px solid var(--border-strong);
+    border-radius: 12px; font-size: 12px;
+    color: var(--text-soft); position: relative; z-index: 5;
+    line-height: 1.8; word-break: break-word;
+    box-shadow: 0 0 15px var(--glow-purple);
+}
+.fixed-acc b { color: var(--yellow); }
+.tag {
+    display: inline-block; padding: 2px 8px; border-radius: 8px;
+    background: rgba(79,195,247,0.2); color: var(--blue);
+    font-weight: 800; font-size: 10.5px; margin-right: 6px;
+}
+
+/* ========== CARD GRID ========== */
+.card-grid {
+    max-width: 1200px; margin: 20px auto 60px; padding: 0 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(215px, 1fr));
+    gap: 18px; position: relative; z-index: 5;
+}
+.card {
+    background: var(--card-bg);
+    border: 2px solid var(--border);
+    border-radius: 20px; padding: 26px 16px;
+    text-align: center; cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 0 25px rgba(0,0,0,0.4);
+    position: relative; overflow: hidden;
+}
+.card::before {
+    content: '';
+    position: absolute; top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    animation: shimmerSweep 4s infinite;
+    pointer-events: none;
+}
+@keyframes shimmerSweep {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+.card:hover {
+    border-color: var(--pink);
+    box-shadow: 0 0 45px var(--glow-pink), 0 10px 30px rgba(0,0,0,0.5);
+    transform: translateY(-6px) scale(1.02);
+}
+.card-icon {
+    font-size: 46px; margin-bottom: 12px;
+    filter: drop-shadow(0 0 12px var(--pink));
+    display: inline-block;
+}
+.card-title {
+    color: var(--pink); font-size: 15px; font-weight: 900;
+    letter-spacing: 1.5px; margin-bottom: 6px;
+}
+.card-desc { color: var(--text-soft); font-size: 11px; opacity: 0.85; line-height: 1.5; }
+
+/* ========== MODAL ========== */
+.modal-overlay {
+    position: fixed; inset: 0; background: rgba(10,2,15,0.9);
+    backdrop-filter: blur(8px); z-index: 500;
+    display: none; align-items: center; justify-content: center;
+    padding: 20px;
+}
+.modal-overlay.show { display: flex; animation: fadeIn 0.25s; }
+@keyframes fadeIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
+.modal {
+    background: var(--card-bg);
+    border: 2px solid var(--pink);
+    border-radius: 20px; max-width: 920px; width: 100%;
+    max-height: 92vh; overflow: hidden;
+    box-shadow: 0 0 60px var(--glow-pink), 0 0 100px var(--glow-purple);
+    display: flex; flex-direction: column;
+}
+.modal-header {
+    padding: 14px 20px;
+    background: linear-gradient(135deg, var(--pink), var(--purple));
+    color: #fff; font-weight: 800; font-size: 14px;
+    display: flex; justify-content: space-between; align-items: center;
+    letter-spacing: 1.5px; flex-shrink: 0;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+.modal-close { cursor: pointer; font-size: 22px; padding: 0 6px; line-height: 1; transition: transform 0.2s; }
+.modal-close:hover { transform: rotate(90deg); }
+.modal-body { padding: 20px; overflow-y: auto; flex: 1; }
+
+/* ========== STEP ========== */
+.step { animation: fadeIn 0.3s; }
+.step.hidden { display: none; }
+.step-title {
+    color: var(--yellow); font-weight: 800; font-size: 13px;
+    margin-bottom: 12px; padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255,215,0,0.3);
+    letter-spacing: 0.5px;
+}
+
+/* ========== FORM ========== */
+.field { margin-bottom: 14px; }
+.field label {
+    display: block; color: var(--blue); font-weight: 700;
+    margin-bottom: 6px; font-size: 12.5px; letter-spacing: 0.5px;
+}
+input[type=text], input[type=number], select, textarea {
+    width: 100%; padding: 11px 14px;
+    background: rgba(0,0,0,0.55);
+    border: 1.5px solid var(--border);
+    border-radius: 10px; color: var(--white);
+    font-size: 13.5px; outline: none; font-family: inherit;
+    transition: all 0.2s;
+}
+textarea { resize: vertical; min-height: 90px; font-family: 'Consolas', monospace; font-size: 12px; }
+input:focus, select:focus, textarea:focus {
+    border-color: var(--pink);
+    box-shadow: 0 0 15px var(--glow-pink);
+    background: rgba(74,14,78,0.5);
+}
+input::placeholder, textarea::placeholder { color: rgba(224,208,232,0.4); }
+select { cursor: pointer; }
+select option { background: #2a0a2e; color: var(--white); }
+
+/* ========== BUTTON ========== */
+.btn {
+    width: 100%; padding: 12px 16px;
+    border: none; border-radius: 10px;
+    font-weight: 800; font-size: 13.5px;
+    cursor: pointer; color: #fff; font-family: inherit;
+    background: linear-gradient(135deg, var(--pink), var(--purple));
+    box-shadow: 0 4px 15px var(--glow-pink);
+    transition: all 0.25s; letter-spacing: 1px;
+}
+.btn:hover:not(:disabled) {
+    background: linear-gradient(135deg, var(--purple), var(--pink));
+    box-shadow: 0 6px 25px var(--pink);
+    transform: translateY(-2px);
+}
+.btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+.btn.btn-blue {
+    background: linear-gradient(135deg, var(--blue), var(--purple));
+    box-shadow: 0 4px 15px rgba(79,195,247,0.4);
+}
+.btn.btn-blue:hover:not(:disabled) {
+    background: linear-gradient(135deg, var(--purple), var(--blue));
+    box-shadow: 0 6px 25px var(--blue);
+}
+.btn.btn-yellow {
+    background: linear-gradient(135deg, var(--yellow), #ff9800);
+    box-shadow: 0 4px 15px rgba(255,215,0,0.4);
+    color: #333;
+}
+.btn.btn-yellow:hover:not(:disabled) {
+    background: linear-gradient(135deg, #ffeb3b, var(--yellow));
+    box-shadow: 0 6px 25px var(--yellow);
+}
+.btn.btn-danger {
+    background: linear-gradient(135deg, #ff5252, #b71c1c);
+    box-shadow: 0 4px 15px rgba(255,82,82,0.4);
+}
+.btn.btn-danger:hover:not(:disabled) {
+    background: linear-gradient(135deg, #b71c1c, #ff5252);
+    box-shadow: 0 6px 25px #ff5252;
+}
+.btn-row { display: flex; gap: 8px; margin-top: 8px; }
+.btn-row .btn { flex: 1; }
+
+/* ========== INFO BOX ========== */
+.info-box {
+    background: rgba(0,0,0,0.5);
+    border: 1.5px solid var(--border-strong);
+    border-radius: 12px; padding: 14px; margin-bottom: 16px;
+    font-size: 12.5px; line-height: 1.7;
+}
+.info-box .row {
+    display: flex; justify-content: space-between;
+    padding: 5px 0; gap: 10px;
+    border-bottom: 1px dashed rgba(255,155,179,0.15);
+    align-items: flex-start;
+}
+.info-box .row:last-child { border-bottom: none; }
+.info-box .label { color: var(--blue-soft); font-weight: 600; flex-shrink: 0; }
+.info-box .value {
+    color: var(--yellow); font-weight: 700;
+    word-break: break-all; text-align: right;
+}
+.info-box .section {
+    color: var(--yellow); font-weight: 800;
+    margin: 12px 0 6px; padding: 6px 0;
+    border-bottom: 1px solid rgba(255,215,0,0.3);
+    font-size: 12px; letter-spacing: 1px; text-transform: uppercase;
+}
+.info-box .section:first-child { margin-top: 0; }
+
+/* ========== MEMBER LIST ========== */
+.member-list, .guild-list {
+    max-height: 460px; overflow-y: auto;
+    border-radius: 10px; padding-right: 4px;
+}
+.member-row, .guild-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px;
+    background: rgba(0,0,0,0.4);
+    border: 1px solid var(--border);
+    border-radius: 8px; margin-bottom: 6px;
+    cursor: pointer; transition: all 0.2s;
+}
+.member-row:hover, .guild-row:hover {
+    border-color: var(--pink);
+    background: rgba(74,14,78,0.5);
+    transform: translateX(4px);
+    box-shadow: 0 0 15px var(--glow-pink);
+}
+.guild-row.top1 { border-color: var(--yellow); background: rgba(255,215,0,0.1); }
+.guild-row.top2 { border-color: #c0c0c0; background: rgba(192,192,192,0.1); }
+.guild-row.top3 { border-color: #cd7f32; background: rgba(205,127,50,0.1); }
+
+.member-stt {
+    width: 44px; font-weight: 900; color: var(--yellow);
+    text-align: center; flex-shrink: 0; font-size: 14px;
+}
+.rank {
+    width: 46px; font-weight: 900; color: var(--pink);
+    text-align: center; flex-shrink: 0; font-size: 13px;
+}
+.rank.top1 { color: var(--yellow); }
+.rank.top2 { color: #c0c0c0; }
+.rank.top3 { color: #cd7f32; }
+
+.member-name, .guild-info { flex: 1; min-width: 0; word-break: break-all; }
+.member-name { font-weight: 700; color: var(--white); font-size: 12.5px; }
+.guild-info-name { font-weight: 700; color: var(--pink); font-size: 13px; word-break: break-all; }
+.guild-info-id { font-size: 10.5px; color: var(--text-soft); opacity: 0.7; margin-top: 2px; }
+.member-meta, .guild-meta-right {
+    display: flex; gap: 8px; font-size: 11px;
+    flex-shrink: 0; flex-wrap: wrap; justify-content: flex-end;
+}
+.guild-meta-right { flex-direction: column; align-items: flex-end; gap: 2px; }
+.member-meta .badge {
+    padding: 3px 8px; border-radius: 10px;
+    background: rgba(79,195,247,0.2);
+    color: var(--blue);
+    font-weight: 800; font-size: 10.5px;
+}
+.guild-score { font-weight: 800; color: var(--yellow); font-size: 12.5px; }
+.guild-member-count { font-size: 10.5px; color: var(--text-soft); opacity: 0.85; }
+
+/* ========== RESULT BOX ========== */
+.result-box {
+    margin-top: 16px; padding: 14px;
+    background: rgba(0,0,0,0.5);
+    border: 1.5px solid var(--pink);
+    border-radius: 12px;
+    animation: fadeIn 0.3s;
+}
+.result-box.hidden { display: none; }
+.res-badge {
+    display: inline-block;
+    padding: 8px 16px; border-radius: 20px;
+    font-weight: 800; font-size: 13px; margin-bottom: 8px;
+}
+.res-badge.ok { background: rgba(76,175,80,0.25); color: #81c784; border: 1.5px solid #4caf50; }
+.res-badge.fail { background: rgba(229,57,53,0.25); color: #ff8a80; border: 1.5px solid #e53935; }
+.res-badge.warn { background: rgba(255,193,7,0.2); color: #ffca28; border: 1.5px solid #ffc107; }
+
+/* ========== LOADING ========== */
+.loading-overlay {
+    position: fixed; inset: 0;
+    background: rgba(10,2,15,0.92);
+    z-index: 999; display: none;
+    flex-direction: column; align-items: center; justify-content: center;
+    backdrop-filter: blur(4px);
+}
+.loading-overlay.show { display: flex; }
+.loading-icon {
+    font-size: 80px;
+    animation: spinBounce 1s ease-in-out infinite;
+    filter: drop-shadow(0 0 30px var(--pink));
+    display: inline-block;
+}
+@keyframes spinBounce {
+    0% { transform: scale(1) rotate(0deg); }
+    50% { transform: scale(1.25) rotate(180deg); }
+    100% { transform: scale(1) rotate(360deg); }
+}
+.loading-text {
+    margin-top: 20px; font-size: 16px; font-weight: 700;
+    color: var(--pink); text-shadow: 0 0 15px var(--pink);
+    padding: 0 20px; text-align: center;
+}
+
+/* ========== CROWN FAB ========== */
+.crown-fab {
+    position: fixed;
+    bottom: 20px; right: 20px;
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #ffeb3b, #ffb300 50%, #ff8800);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    cursor: grab;
+    z-index: 200;
+    box-shadow: 0 4px 12px rgba(255,215,0,0.5);
+    transition: box-shadow 0.3s, transform 0.15s;
+    user-select: none;
+    touch-action: none;
+    border: 2px solid rgba(255,255,255,0.4);
+}
+.crown-fab:active { cursor: grabbing; transform: scale(0.95); }
+.crown-fab.fix-on {
+    animation: crownGlow 1.5s ease-in-out infinite;
+    border-color: #fff;
+    background: radial-gradient(circle at 30% 30%, #ffff66, #ffd700 50%, #ff9800);
+}
+@keyframes crownGlow {
+    0%, 100% { box-shadow: 0 0 15px #ffd700, 0 0 30px rgba(255,215,0,0.6); }
+    50% { box-shadow: 0 0 30px #ffd700, 0 0 60px #ffd700, 0 0 90px rgba(255,215,0,0.5); }
+}
+
+/* ========== SCROLLBAR ========== */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: rgba(0,0,0,0.3); border-radius: 4px; }
+::-webkit-scrollbar-thumb { background: var(--purple-mid); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--pink); }
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 600px) {
+    .member-meta { gap: 4px; }
+    .member-meta .badge { padding: 2px 6px; font-size: 10px; }
+    .mini-btn { padding: 6px 9px; font-size: 10.5px; }
+    .modal-body { padding: 14px; }
+    .card { padding: 20px 12px; }
+    .card-icon { font-size: 38px; }
+    .crown-fab { width: 34px; height: 34px; font-size: 16px; bottom: 14px; right: 14px; }
+    .btn-row { flex-direction: column; }
+}
+
+.hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<div class="sakura-container" id="sakuraContainer"></div>
+
+<div class="top-bar">
+    <div class="top-left">
+        <button class="mini-btn" id="proxyBtn">🌐 PROXY</button>
+    </div>
+    <div class="top-right">
+        <button class="mini-btn" onclick="location.reload()">🔄 RESET</button>
+    </div>
+</div>
+
+<div class="header">
+    <h1>🌸 SAKURA TOOL v4 🌸</h1>
+    <p>ツール・サクラ - by 006</p>
+</div>
+
+<div class="fixed-acc">
+    <span class="tag">🔒 ACC SẴN</span>
+    <b>UID:</b> TDM590145qQF_1 &nbsp;·&nbsp;
+    <b>HOST:</b> duongduonghy2021@gmail.com &nbsp;·&nbsp;
+    <b>SERVER:</b> AMO
+</div>
+
+<div class="card-grid">
+    <div class="card" data-func="guild-info">
+        <div class="card-icon">🏰</div>
+        <div class="card-title">SOI FULL BANG</div>
+        <div class="card-desc">Thành viên, hero, level, online...</div>
+    </div>
+    <div class="card" data-func="guild-search">
+        <div class="card-icon">🔍</div>
+        <div class="card-title">LẤY ID BANG</div>
+        <div class="card-desc">Tìm bang theo tên (nâng cao)</div>
+    </div>
+    <div class="card" data-func="guild-ranking">
+        <div class="card-icon">🏆</div>
+        <div class="card-title">TOP 100 GUILD</div>
+        <div class="card-desc">Bảng xếp hạng bang hội</div>
+    </div>
+    <div class="card" data-func="blacklist">
+        <div class="card-icon">🚫</div>
+        <div class="card-title">CHECK BLACKLIST</div>
+        <div class="card-desc">Kiểm tra UID có bị ban</div>
+    </div>
+    <div class="card" data-func="user-info">
+        <div class="card-icon">👤</div>
+        <div class="card-title">FULL INFO ACC</div>
+        <div class="card-desc">Thông tin chi tiết tài khoản</div>
+    </div>
+    <div class="card" data-func="create-guild">
+        <div class="card-icon">🏛️</div>
+        <div class="card-title">TẠO BANG</div>
+        <div class="card-desc">Tạo bang hội mới</div>
+    </div>
+    <div class="card" data-func="leave-guild">
+        <div class="card-icon">🚪</div>
+        <div class="card-title">RỜI BANG</div>
+        <div class="card-desc">Rời bang (có/không host)</div>
+    </div>
+    <div class="card" data-func="kick-member">
+        <div class="card-icon">🧹</div>
+        <div class="card-title">KICK MEMBER</div>
+        <div class="card-desc">Đuổi thành viên khỏi bang</div>
+    </div>
+    <div class="card" data-func="transfer-master">
+        <div class="card-icon">👑</div>
+        <div class="card-title">CHUYỂN CHỦ</div>
+        <div class="card-desc">Chuyển quyền chủ bang</div>
+    </div>
+</div>
+
+<!-- ===== SOI FULL BANG ===== -->
+<div class="modal-overlay" id="modal-guild-info">
+    <div class="modal">
+        <div class="modal-header"><span>🏰 SOI FULL BANG</span><span class="modal-close" data-close>✖</span></div>
+        <div class="modal-body">
+            <div class="field"><label>🆔 GUILD BUNHO (ID Bang)</label><input type="text" id="gi-bunho" placeholder="Nhập ID bang..." /></div>
+            <button class="btn" id="gi-fetch">📥 SOI BANG</button>
+            <div id="gi-result" class="result-box hidden"></div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== LẤY ID BANG ===== -->
+<div class="modal-overlay" id="modal-guild-search">
+    <div class="modal">
+        <div class="modal-header"><span>🔍 LẤY ID BANG</span><span class="modal-close" data-close>✖</span></div>
+        <div class="modal-body">
+            <div class="field"><label>🔍 TỪ KHÓA (VD: THE)</label><input type="text" id="gs-word" placeholder="Nhập từ khóa..." /></div>
+            <button class="btn" id="gs-fetch">🔎 TÌM BANG</button>
+            <div id="gs-result" class="result-box hidden"></div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== TOP 100 ===== -->
+<div class="modal-overlay" id="modal-guild-ranking">
+    <div class="modal">
+        <div class="modal-header"><span>🏆 TOP 100 GUILD</span><span class="modal-close" data-close>✖</span></div>
+        <div class="modal-body">
+            <button class="btn" id="gr-fetch">🏆 TẢI BXH TOP 100</button>
+            <div id="gr-result" class="result-box hidden"></div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== BLACKLIST ===== -->
+<div class="modal-overlay" id="modal-blacklist">
+    <div class="modal">
+        <div class="modal-header"><span>🚫 CHECK BLACKLIST</span><span class="modal-close" data-close>✖</span></div>
+        <div class="modal-body">
+            <div class="field"><label>🆔 UNIQ_ID</label><input type="text" id="bl-uid" placeholder="Nhập UID..." /></div>
+            <div class="field">
+                <label>🌐 PLATFORM</label>
+                <select id="bl-platform">
+                    <option value="AMO">📱 AMO</option><option value="ATV">📺 ATV</option>
+                    <option value="LG">💻 LG</option><option value="SS">📟 SS</option>
+                </select>
+            </div>
+            <button class="btn" id="bl-check">🔍 CHECK</button>
+            <div id="bl-result" class="result-box hidden"></div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== USER INFO ===== -->
+<div class="modal-overlay" id="modal-user-info">
+    <div class="modal">
+        <div class="modal-header"><span>👤 FULL INFO ACC</span><span class="modal-close" data-close>✖</span></div>
+        <div class="modal-body">
+            <div class="field">
+                <label>🌐 PLATFORM</label>
+                <select id="ui-platform">
+                    <option value="AMO">📱 AMO</option><option value="ATV">📺 ATV</option>
+                    <option value="LG">💻 LG</option><option value="SS">📟 SS</option>
+                </select>
+            </div>
+            <div class="field"><label>🆔 UID</label><input type="text" id="ui-uid" placeholder="Nhập UID..." /></div>
+            <div class="field"><label>📧 HOST_ID</label><input type="text" id="ui-host" placeholder="Nhập HOST_ID..." /></div>
+            <button class="btn" id="ui-fetch">📊 LẤY INFO</button>
+            <div id="ui-result" class="result-box hidden"></div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== TẠO BANG ===== -->
+<div class="modal-overlay" id="modal-create-guild">
+    <div class="modal">
+        <div class="modal-header"><span>🏛️ TẠO BANG HỘI</span><span class="modal-close" data-close>✖</span></div>
+        <div class="modal-body">
+            <div class="field">
+                <label>🌐 PLATFORM</label>
+                <select id="cg-platform">
+                    <option value="AMO">📱 AMO</option><option value="ATV">📺 ATV</option>
+                    <option value="LG">💻 LG</option><option value="SS">📟 SS</option>
+                </select>
+            </div>
+            <div class="field"><label>🆔 UID</label><input type="text" id="cg-uid" placeholder="Nhập UID..." /></div>
+            <div class="field"><label>📧 HOST_ID</label><input type="text" id="cg-host" placeholder="Nhập HOST_ID..." /></div>
+            <div class="field"><label>🏰 TÊN BANG</label><input type="text" id="cg-name" placeholder="Nhập tên bang..." /></div>
+            <div class="field">
+                <label>📋 LOẠI BANG</label>
+                <select id="cg-type"><option value="1">🏰 Tự Do</option><option value="2">✅ Phê Duyệt</option></select>
+            </div>
+            <div class="field"><label>👥 MAX MEMBER</label><input type="number" id="cg-max" value="30" min="1" max="100" /></div>
+            <button class="btn btn-yellow" id="cg-create">🏛️ TẠO BANG</button>
+            <div id="cg-result" class="result-box hidden"></div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== RỜI BANG ===== -->
+<div class="modal-overlay" id="modal-leave-guild">
+    <div class="modal">
+        <div class="modal-header"><span>🚪 RỜI BANG HỘI</span><span class="modal-close" data-close>✖</span></div>
+        <div class="modal-body">
+            <div class="step" id="lg-step1">
+                <div class="step-title">🎯 CHỌN CHẾ ĐỘ</div>
+                <button class="btn btn-blue" data-lg-mode="1" style="margin-bottom:8px">[1] ACC KHÔNG CÓ HOST</button>
+                <button class="btn btn-yellow" data-lg-mode="2">[2] ACC CÓ HOST</button>
+            </div>
+            <div class="step hidden" id="lg-step-m1">
+                <div class="step-title">📝 ACC KHÔNG HOST - DÙNG ACC SẴN</div>
+                <div class="info-box">
+                    <div class="row"><span class="label">💡 GICHAPO</span><span class="value">Từ acc sẵn (TDM590145qQF_1)</span></div>
+                </div>
+                <div class="field"><label>🆔 UID ACC CẦN RỜI</label><input type="text" id="lg-m1-uid" placeholder="Nhập UID..." /></div>
+                <div class="field"><label>🏰 GUILD BUNHO</label><input type="text" id="lg-m1-guild" placeholder="Nhập ID bang..." /></div>
+                <button class="btn btn-danger" id="lg-m1-confirm">🚪 XÁC NHẬN RỜI BANG</button>
+                <button class="btn" id="lg-m1-back" style="margin-top:8px;background:rgba(0,0,0,0.5)">← Quay lại</button>
+                <div id="lg-result" class="result-box hidden"></div>
+            </div>
+            <div class="step hidden" id="lg-step-m2a">
+                <div class="step-title">📝 NHẬP ACC CẦN RỜI</div>
+                <div class="field">
+                    <label>🌐 PLATFORM</label>
+                    <select id="lg-m2-platform">
+                        <option value="AMO">📱 AMO</option><option value="ATV">📺 ATV</option>
+                        <option value="LG">💻 LG</option><option value="SS">📟 SS</option>
+                    </select>
+                </div>
+                <div class="field"><label>🆔 UID</label><input type="text" id="lg-m2-uid" placeholder="Nhập UID..." /></div>
+                <div class="field"><label>📧 HOST_ID</label><input type="text" id="lg-m2-host" placeholder="Nhập HOST_ID..." /></div>
+                <button class="btn btn-blue" id="lg-m2-fetch">📥 LẤY INFO ACC</button>
+                <button class="btn" id="lg-m2-back" style="margin-top:8px;background:rgba(0,0,0,0.5)">← Quay lại</button>
+            </div>
+            <div class="step hidden" id="lg-step-m2b">
+                <div class="step-title">📊 THÔNG TIN ACC</div>
+                <div id="lg-m2-info"></div>
+                <div id="lg-m2-noguild" class="hidden">
+                    <div class="res-badge warn">⚠️ Acc này chưa ở bang nào</div>
+                </div>
+                <div id="lg-m2-hasguild" class="hidden">
+                    <button class="btn btn-danger" id="lg-m2-confirm">🚪 XÁC NHẬN RỜI BANG</button>
+                </div>
+                <button class="btn" id="lg-m2-back2" style="margin-top:8px;background:rgba(0,0,0,0.5)">← Quay lại</button>
+                <div id="lg-result2" class="result-box hidden"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== KICK MEMBER ===== -->
+<div class="modal-overlay" id="modal-kick-member">
+    <div class="modal">
+        <div class="modal-header"><span>🧹 KICK THÀNH VIÊN</span><span class="modal-close" data-close>✖</span></div>
+        <div class="modal-body">
+            <div class="step" id="km-step1">
+                <div class="step-title">📝 NHẬP ACC CỦA BẠN</div>
+                <div class="field">
+                    <label>🌐 PLATFORM</label>
+                    <select id="km-platform">
+                        <option value="AMO">📱 AMO</option><option value="ATV">📺 ATV</option>
+                        <option value="LG">💻 LG</option><option value="SS">📟 SS</option>
+                    </select>
+                </div>
+                <div class="field"><label>🆔 UID</label><input type="text" id="km-uid" placeholder="Nhập UID..." /></div>
+                <div class="field"><label>📧 HOST_ID</label><input type="text" id="km-host" placeholder="Nhập HOST_ID..." /></div>
+                <button class="btn btn-blue" id="km-fetch-user">📥 LẤY INFO ACC</button>
+            </div>
+            <div class="step hidden" id="km-step2">
+                <div class="step-title">📊 ACC CỦA BẠN</div>
+                <div id="km-user-info"></div>
+                <div class="step-title" style="margin-top:12px">🏰 ID BANG CẦN KICK</div>
+                <div class="field"><label>🏰 GUILD BUNHO</label><input type="text" id="km-guild" placeholder="Nhập ID bang..." /></div>
+                <button class="btn btn-blue" id="km-fetch-guild">📥 LẤY INFO BANG</button>
+            </div>
+            <div class="step hidden" id="km-step3">
+                <div class="step-title">🏰 THÔNG TIN BANG</div>
+                <div id="km-guild-info"></div>
+                <div class="step-title" style="margin-top:12px">👑 UID CHỦ BANG</div>
+                <div class="field"><label>👑 MASTER UID</label><input type="text" id="km-master" placeholder="UID chủ bang..." /></div>
+                <button class="btn btn-yellow" id="km-load-members">👥 TẢI DANH SÁCH TV</button>
+            </div>
+            <div class="step hidden" id="km-step4">
+                <div class="step-title">👥 CHỌN THÀNH VIÊN MUỐN KICK</div>
+                <div id="km-member-list"></div>
+                <div id="km-result" class="result-box hidden"></div>
+                <div class="btn-row hidden" id="km-next-actions">
+                    <button class="btn btn-blue" id="km-more">[1] KICK TIẾP</button>
+                    <button class="btn btn-danger" id="km-stop">[2] DỪNG</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== CHUYỂN CHỦ ===== -->
+<div class="modal-overlay" id="modal-transfer-master">
+    <div class="modal">
+        <div class="modal-header"><span>👑 CHUYỂN CHỦ BANG</span><span class="modal-close" data-close>✖</span></div>
+        <div class="modal-body">
+            <div class="step" id="tm-step0">
+                <div class="step-title">🔑 BƯỚC 1: LẤY GICHAPO ACC SẴN</div>
+                <div class="info-box">
+                    <div class="row"><span class="label">🆔 UID</span><span class="value">TDM590145qQF_1</span></div>
+                    <div class="row"><span class="label">📧 HOST</span><span class="value">duongduonghy2021@gmail.com</span></div>
+                </div>
+                <button class="btn btn-blue" id="tm-start">🔑 LẤY GICHAPO & BẮT ĐẦU</button>
+            </div>
+            <div class="step hidden" id="tm-step1">
+                <div class="step-title">🏰 BƯỚC 2: NHẬP ID BANG</div>
+                <div class="field"><label>🏰 GUILD BUNHO</label><input type="text" id="tm-guild" placeholder="Nhập ID bang..." /></div>
+                <button class="btn btn-blue" id="tm-fetch-guild">📥 LẤY INFO BANG</button>
+            </div>
+            <div class="step hidden" id="tm-step2">
+                <div class="step-title">🏰 THÔNG TIN BANG</div>
+                <div id="tm-guild-info"></div>
+                <div class="step-title" style="margin-top:12px">👑 THÔNG TIN CHUYỂN CHỦ</div>
+                <div class="field"><label>👑 UID CHỦ CŨ</label><input type="text" id="tm-old-master" placeholder="UID chủ cũ..." /></div>
+                <div class="field"><label>👤 UID CHỦ MỚI</label><input type="text" id="tm-new-master" placeholder="UID chủ mới..." /></div>
+                <div class="field"><label>📝 TÊN CHỦ MỚI</label><input type="text" id="tm-new-name" placeholder="Tên chủ mới..." /></div>
+                <div class="field"><label>⭐ LEVEL CHỦ MỚI</label><input type="number" id="tm-new-level" value="1" min="1" /></div>
+                <button class="btn btn-yellow" id="tm-confirm">👑 XÁC NHẬN CHUYỂN CHỦ</button>
+            </div>
+            <div id="tm-result" class="result-box hidden"></div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== PROXY ===== -->
+<div class="modal-overlay" id="modal-proxy">
+    <div class="modal">
+        <div class="modal-header"><span>🌐 PROXY MANAGER</span><span class="modal-close" data-close>✖</span></div>
+        <div class="modal-body">
+            <div class="field">
+                <label>📝 DANH SÁCH PROXY (mỗi dòng 1 proxy)</label>
+                <textarea id="proxy-list" placeholder="http://user:pass@host:port&#10;http://host:port&#10;host:port"></textarea>
+            </div>
+            <div class="field">
+                <label><input type="checkbox" id="proxy-auto" style="width:auto;margin-right:6px" /> ⚡ Auto đổi khi server rỗng/lỗi</label>
+            </div>
+            <button class="btn" id="proxy-save">💾 LƯU CẤU HÌNH</button>
+            <button class="btn btn-yellow" id="proxy-rotate" style="margin-top:8px">🔄 ĐỔI PROXY</button>
+            <div id="proxy-status" class="info-box" style="margin-top:12px;">
+                <div class="row"><span class="label">📊 Tổng proxy</span><span class="value" id="proxy-total">0</span></div>
+                <div class="row"><span class="label">🌐 Hiện tại</span><span class="value" id="proxy-current">Chưa set</span></div>
+                <div class="row"><span class="label">⚡ Auto</span><span class="value" id="proxy-auto-status">Tắt</span></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="loading-overlay" id="loading">
+    <div class="loading-icon" id="loadingIcon">🌸</div>
+    <div class="loading-text" id="loadingText">Đang xử lý...</div>
+</div>
+
+<div class="crown-fab" id="crownFab" title="Kéo để di chuyển · Click bật/tắt FIX LAG">👑</div>
+
+<script>
+// ==================== SAKURA ====================
+let fixLag = false;
+const PETAL_NORMAL = 30;
+const PETAL_LAG = 1;
+const PETALS = ['🌸','💮','🌺','❀','❁','✿','🌸','💮'];
+
+function rebuildPetals() {
+    const c = document.getElementById('sakuraContainer');
+    c.innerHTML = '';
+    const count = fixLag ? PETAL_LAG : PETAL_NORMAL;
+    for (let i = 0; i < count; i++) {
+        const p = document.createElement('div');
+        p.className = 'petal';
+        p.textContent = PETALS[Math.floor(Math.random() * PETALS.length)];
+        p.style.left = Math.random() * 100 + '%';
+        p.style.animationDuration = (10 + Math.random() * 10) + 's';
+        p.style.animationDelay = (Math.random() * 6) + 's';
+        p.style.fontSize = (14 + Math.random() * 14) + 'px';
+        p.style.opacity = 0.5 + Math.random() * 0.35;
+        c.appendChild(p);
+    }
+}
+rebuildPetals();
+
+// ==================== CROWN FAB ====================
+const crown = document.getElementById('crownFab');
+let crownDragging = false, crownWasDragged = false;
+let crownStartX = 0, crownStartY = 0, crownOffsetX = 0, crownOffsetY = 0;
+
+crown.addEventListener('pointerdown', e => {
+    e.preventDefault();
+    crownDragging = true;
+    crownWasDragged = false;
+    const rect = crown.getBoundingClientRect();
+    crownOffsetX = e.clientX - rect.left;
+    crownOffsetY = e.clientY - rect.top;
+    crownStartX = e.clientX;
+    crownStartY = e.clientY;
+    try { crown.setPointerCapture(e.pointerId); } catch (er) { }
+});
+crown.addEventListener('pointermove', e => {
+    if (!crownDragging) return;
+    const dx = Math.abs(e.clientX - crownStartX);
+    const dy = Math.abs(e.clientY - crownStartY);
+    if (dx > 5 || dy > 5) crownWasDragged = true;
+    if (!crownWasDragged) return;
+    let x = e.clientX - crownOffsetX;
+    let y = e.clientY - crownOffsetY;
+    x = Math.max(0, Math.min(x, window.innerWidth - crown.offsetWidth));
+    y = Math.max(0, Math.min(y, window.innerHeight - crown.offsetHeight));
+    crown.style.left = x + 'px';
+    crown.style.top = y + 'px';
+    crown.style.right = 'auto';
+    crown.style.bottom = 'auto';
+});
+crown.addEventListener('pointerup', e => {
+    if (!crownDragging) return;
+    crownDragging = false;
+    try { crown.releasePointerCapture(e.pointerId); } catch (er) { }
+    if (!crownWasDragged) {
+        fixLag = !fixLag;
+        document.body.classList.toggle('fix-lag', fixLag);
+        crown.classList.toggle('fix-on', fixLag);
+        rebuildPetals();
+    }
+});
+crown.addEventListener('pointercancel', () => { crownDragging = false; });
+
+// ==================== MODAL ====================
+document.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('click', () => {
+        const func = card.dataset.func;
+        openModal('modal-' + func);
+        if (func === 'proxy') loadProxyStatus();
+    });
+});
+document.querySelectorAll('[data-close]').forEach(el => {
+    el.addEventListener('click', () => document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('show')));
+});
+document.querySelectorAll('.modal-overlay').forEach(m => {
+    m.addEventListener('click', e => { if (e.target === m) m.classList.remove('show'); });
+});
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('show'));
+});
+function openModal(id) {
+    document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('show'));
+    const el = document.getElementById(id);
+    if (el) el.classList.add('show');
+}
+
+// ==================== LOADING ====================
+const loadingEl = document.getElementById('loading');
+const loadingIconEl = document.getElementById('loadingIcon');
+const loadingTextEl = document.getElementById('loadingText');
+const LOADING_ICONS = ['🌸','💮','🌺','❀','✿','🎴','⭐','✨','💫','🌟'];
+let loadingInterval = null;
+function showLoading(text) {
+    loadingTextEl.textContent = text || 'Đang xử lý...';
+    loadingIconEl.textContent = LOADING_ICONS[Math.floor(Math.random() * LOADING_ICONS.length)];
+    loadingEl.classList.add('show');
+    if (loadingInterval) clearInterval(loadingInterval);
+    loadingInterval = setInterval(() => {
+        if (Math.random() < 0.35) loadingIconEl.textContent = LOADING_ICONS[Math.floor(Math.random() * LOADING_ICONS.length)];
+    }, 250);
+}
+function hideLoading() {
+    loadingEl.classList.remove('show');
+    if (loadingInterval) { clearInterval(loadingInterval); loadingInterval = null; }
+}
+
+// ==================== API ====================
+async function apiPost(path, body) {
+    try {
+        const res = await fetch(path, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body || {})
+        });
+        return await res.json();
+    } catch (e) { return { success: false, error: e.message }; }
+}
+async function apiGet(path) {
+    try { return await (await fetch(path)).json(); }
+    catch (e) { return { ok: false, error: e.message }; }
+}
+
+// ==================== HELPERS ====================
+function esc(s) {
+    return String(s === null || s === undefined ? '' : s)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+function timeAgo(timeStr) {
+    if (!timeStr || timeStr === '0000-00-00 00:00:00' || timeStr === 'N/A' || timeStr === '') return 'Không DL';
+    try {
+        const t = new Date(timeStr.replace(' ', 'T') + (timeStr.includes('Z') ? '' : 'Z'));
+        if (isNaN(t.getTime())) return String(timeStr).substring(0, 16);
+        const diff = Math.floor((Date.now() - t.getTime()) / 1000);
+        if (diff < 0) return 'Vừa online';
+        if (diff < 60) return diff + 's trước';
+        if (diff < 3600) return Math.floor(diff / 60) + 'p trước';
+        if (diff < 86400) return Math.floor(diff / 3600) + 'h trước';
+        const days = Math.floor(diff / 86400);
+        if (days < 30) return days + ' ngày trước';
+        if (days < 365) return Math.floor(days / 30) + ' tháng trước';
+        return Math.floor(days / 365) + ' năm trước';
+    } catch (e) { return String(timeStr).substring(0, 16); }
+}
+function showResult(id, type, html) {
+    const box = document.getElementById(id);
+    if (!box) return;
+    box.classList.remove('hidden');
+    box.innerHTML = html;
+}
+function memberDetailHTML(m, idx) {
+    return '<div class="info-box">' +
+        '<div class="section">👤 THÀNH VIÊN #' + (idx + 1) + '</div>' +
+        '<div class="row"><span class="label">👤 Tên</span><span class="value">' + esc(m.name) + '</span></div>' +
+        '<div class="row"><span class="label">🆔 UNIQ_ID</span><span class="value">' + esc(m.uniq_id) + '</span></div>' +
+        '<div class="row"><span class="label">🆙 Level</span><span class="value">' + esc(m.level) + '</span></div>' +
+        '<div class="row"><span class="label">🦸 Số Hero</span><span class="value">' + esc(m.hero_count) + '</span></div>' +
+        '<div class="row"><span class="label">⭐ Level Hero</span><span class="value">' + esc(m.hero_level) + '</span></div>' +
+        '<div class="row"><span class="label">📊 Điểm</span><span class="value">' + Number(m.score).toLocaleString() + '</span></div>' +
+        '<div class="row"><span class="label">📱 Platform</span><span class="value">' + esc(m.platform) + '</span></div>' +
+        '<div class="row"><span class="label">⏰ Online cuối</span><span class="value">' + timeAgo(m.update_time) + '</span></div>' +
+        '<div class="row"><span class="label">📅 Ngày tham gia</span><span class="value">' + esc(m.ts || 'N/A') + '</span></div>' +
+        '</div>';
+}
+function buildMemberList(d, listId, detailId) {
+    let html = '<div style="color:var(--yellow);font-weight:800;margin-bottom:8px;">📋 ' + d.members.length + ' THÀNH VIÊN — CLICK XEM INFO</div>';
+    html += '<div class="member-list" id="' + listId + '">';
+    d.members.forEach((m, i) => {
+        html += '<div class="member-row" data-idx="' + i + '">' +
+            '<div class="member-stt">' + (i + 1) + '</div>' +
+            '<div class="member-name">' + esc(m.name) + '</div>' +
+            '<div class="member-meta">' +
+                '<span class="badge">Lv ' + esc(m.level) + '</span>' +
+                '<span class="badge">🦸 ' + esc(m.hero_count) + '</span>' +
+                '<span class="badge">' + esc(m.platform) + '</span>' +
+            '</div></div>';
+    });
+    html += '</div><div id="' + detailId + '" style="margin-top:12px;"></div>';
+    return html;
+}
+function attachMemberClicks(listId, detailId, members) {
+    document.querySelectorAll('#' + listId + ' .member-row').forEach(row => {
+        row.addEventListener('click', () => {
+            const idx = parseInt(row.dataset.idx);
+            const detailEl = document.getElementById(detailId);
+            detailEl.innerHTML = memberDetailHTML(members[idx], idx);
+            detailEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+    });
+}
+
+// ==================== SOI FULL BANG ====================
+document.getElementById('gi-fetch').addEventListener('click', async () => {
+    const bunho = document.getElementById('gi-bunho').value.trim();
+    if (!bunho) return alert('Nhập ID bang đi!');
+    const btn = document.getElementById('gi-fetch');
+    btn.disabled = true;
+    showLoading('🌸 Đang soi bang ' + bunho + '...');
+    const res = await apiPost('/api/guild-info', { guild_bunho: bunho });
+    hideLoading();
+    btn.disabled = false;
+    if (!res.success) { showResult('gi-result', 'fail', '<div class="res-badge fail">❌ ' + esc(res.error) + '</div>'); return; }
+    const d = res.data;
+    let html = '<div class="info-box">' +
+        '<div class="section">🏰 THÔNG TIN BANG</div>' +
+        '<div class="row"><span class="label">🏰 Tên</span><span class="value">' + esc(d.guild_name) + '</span></div>' +
+        '<div class="row"><span class="label">🆔 ID</span><span class="value">' + esc(d.guild_bunho) + '</span></div>' +
+        '<div class="row"><span class="label">📊 Điểm War</span><span class="value">' + Number(d.tot_score).toLocaleString() + '</span></div>' +
+        '<div class="row"><span class="label">👥 Slot</span><span class="value">' + d.members.length + '/' + d.max_member + '</span></div>' +
+        '<div class="row"><span class="label">📋 Loại</span><span class="value">' + (d.type === '1' ? 'Tự Do' : 'Phê Duyệt') + '</span></div>' +
+        '<div class="row"><span class="label">👑 Chủ</span><span class="value">' + esc(d.master.name) + ' (Lv ' + esc(d.master.level) + ')</span></div>' +
+        '<div class="row"><span class="label">🆔 ID Chủ</span><span class="value">' + esc(d.master.id) + '</span></div>' +
+        (d.notice ? '<div class="section">📢 THÔNG BÁO</div><div style="color:var(--text-soft);font-size:12px;padding:6px">' + esc(d.notice) + '</div>' : '') +
+        '</div>';
+    html += buildMemberList(d, 'gi-member-list', 'gi-member-detail');
+    showResult('gi-result', 'ok', html);
+    attachMemberClicks('gi-member-list', 'gi-member-detail', d.members);
+});
+
+// ==================== LẤY ID BANG ====================
+document.getElementById('gs-fetch').addEventListener('click', async () => {
+    const word = document.getElementById('gs-word').value.trim();
+    if (!word) return alert('Nhập từ khóa đi!');
+    const btn = document.getElementById('gs-fetch');
+    btn.disabled = true;
+    showLoading('🔍 Đang tìm "' + word + '"...');
+    const res = await apiPost('/api/guild-search', { search_word: word });
+    hideLoading();
+    btn.disabled = false;
+    if (!res.success) { showResult('gs-result', 'fail', '<div class="res-badge fail">❌ ' + esc(res.error) + '</div>'); return; }
+    if (res.guilds.length === 0) { showResult('gs-result', 'warn', '<div class="res-badge warn">⚠️ KHÔNG TÌM THẤY BANG</div>'); return; }
+    let html = '<div class="res-badge ok">✅ TÌM THẤY ' + res.total + ' BANG</div><div class="guild-list" id="gs-guild-list">';
+    res.guilds.forEach((g, i) => {
+        html += '<div class="guild-row" data-idx="' + i + '">' +
+            '<div class="rank">#' + (i + 1) + '</div>' +
+            '<div class="guild-info">' +
+                '<div class="guild-info-name">🏰 ' + esc(g.name) + '</div>' +
+                '<div class="guild-info-id">ID: ' + esc(g.id) + ' · Chủ: ' + esc(g.master_name) + ' (Lv ' + esc(g.master_level) + ')</div>' +
+            '</div>' +
+            '<div class="guild-meta-right">' +
+                '<div class="guild-score">' + Number(g.score).toLocaleString() + '</div>' +
+                '<div class="guild-member-count">👥 ' + g.member + '/' + g.maxMember + '</div>' +
+            '</div></div>';
+    });
+    html += '</div><div id="gs-detail" style="margin-top:12px;"></div>';
+    showResult('gs-result', 'ok', html);
+    document.querySelectorAll('#gs-guild-list .guild-row').forEach(row => {
+        row.addEventListener('click', async () => {
+            const idx = parseInt(row.dataset.idx);
+            const g = res.guilds[idx];
+            const detailEl = document.getElementById('gs-detail');
+            detailEl.innerHTML = '<div class="info-box"><div class="section">⏳ Đang tải...</div></div>';
+            const r2 = await apiPost('/api/guild-info', { guild_bunho: g.id });
+            if (!r2.success) { detailEl.innerHTML = '<div class="res-badge fail">❌ ' + esc(r2.error) + '</div>'; return; }
+            const d = r2.data;
+            let dh = '<div class="info-box">' +
+                '<div class="section">🏰 ' + esc(d.guild_name) + '</div>' +
+                '<div class="row"><span class="label">📊 Điểm War</span><span class="value">' + Number(d.tot_score).toLocaleString() + '</span></div>' +
+                '<div class="row"><span class="label">👥 Slot</span><span class="value">' + d.members.length + '/' + d.max_member + '</span></div>' +
+                '<div class="row"><span class="label">👑 Chủ Bang</span><span class="value">' + esc(d.master.name) + ' (Lv ' + esc(d.master.level) + ')</span></div>' +
+                '<div class="row"><span class="label">🆔 ID Chủ</span><span class="value">' + esc(d.master.id) + '</span></div>' +
+                '</div>';
+            dh += buildMemberList(d, 'gs-member-list', 'gs-member-detail');
+            detailEl.innerHTML = dh;
+            attachMemberClicks('gs-member-list', 'gs-member-detail', d.members);
+            detailEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+    });
+});
+
+// ==================== TOP 100 ====================
+document.getElementById('gr-fetch').addEventListener('click', async () => {
+    const btn = document.getElementById('gr-fetch');
+    btn.disabled = true;
+    showLoading('🏆 Đang tải BXH TOP 100...');
+    const res = await apiPost('/api/guild-ranking', {});
+    hideLoading();
+    btn.disabled = false;
+    if (!res.success) { showResult('gr-result', 'fail', '<div class="res-badge fail">❌ ' + esc(res.error) + '</div>'); return; }
+    if (res.guilds.length === 0) { showResult('gr-result', 'warn', '<div class="res-badge warn">⚠️ KHÔNG CÓ DỮ LIỆU</div>'); return; }
+    let html = '<div class="res-badge ok">🏆 TOP ' + res.guilds.length + ' GUILD</div><div class="guild-list" id="gr-guild-list">';
+    res.guilds.forEach((g, i) => {
+        const rank = i + 1;
+        const cls = rank === 1 ? 'top1' : rank === 2 ? 'top2' : rank === 3 ? 'top3' : '';
+        html += '<div class="guild-row ' + cls + '" data-idx="' + i + '">' +
+            '<div class="rank ' + cls + '">#' + rank + '</div>' +
+            '<div class="guild-info">' +
+                '<div class="guild-info-name">🏰 ' + esc(g.name) + '</div>' +
+                '<div class="guild-info-id">ID: ' + esc(g.id) + '</div>' +
+            '</div>' +
+            '<div class="guild-meta-right">' +
+                '<div class="guild-score">' + Number(g.score).toLocaleString() + '</div>' +
+                '<div class="guild-member-count">👥 ' + g.member + '/' + g.maxMember + '</div>' +
+            '</div></div>';
+    });
+    html += '</div><div id="gr-detail" style="margin-top:12px;"></div>';
+    showResult('gr-result', 'ok', html);
+    document.querySelectorAll('#gr-guild-list .guild-row').forEach(row => {
+        row.addEventListener('click', async () => {
+            const idx = parseInt(row.dataset.idx);
+            const g = res.guilds[idx];
+            const detailEl = document.getElementById('gr-detail');
+            detailEl.innerHTML = '<div class="info-box"><div class="section">⏳ Đang tải...</div></div>';
+            const r2 = await apiPost('/api/guild-info', { guild_bunho: g.id });
+            if (!r2.success) { detailEl.innerHTML = '<div class="res-badge fail">❌ ' + esc(r2.error) + '</div>'; return; }
+            const d = r2.data;
+            let dh = '<div class="info-box">' +
+                '<div class="section">🏰 ' + esc(d.guild_name) + '</div>' +
+                '<div class="row"><span class="label">📊 Điểm War</span><span class="value">' + Number(d.tot_score).toLocaleString() + '</span></div>' +
+                '<div class="row"><span class="label">👥 Slot</span><span class="value">' + d.members.length + '/' + d.max_member + '</span></div>' +
+                '<div class="row"><span class="label">👑 Chủ Bang</span><span class="value">' + esc(d.master.name) + ' (Lv ' + esc(d.master.level) + ')</span></div>' +
+                '<div class="row"><span class="label">🆔 ID Chủ</span><span class="value">' + esc(d.master.id) + '</span></div>' +
+                '</div>';
+            dh += buildMemberList(d, 'gr-member-list', 'gr-member-detail');
+            detailEl.innerHTML = dh;
+            attachMemberClicks('gr-member-list', 'gr-member-detail', d.members);
+            detailEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+    });
+});
+
+// ==================== BLACKLIST ====================
+document.getElementById('bl-check').addEventListener('click', async () => {
+    const uid = document.getElementById('bl-uid').value.trim();
+    const platform = document.getElementById('bl-platform').value;
+    if (!uid) return alert('Nhập UID đi!');
+    const btn = document.getElementById('bl-check');
+    btn.disabled = true;
+    showLoading('🚫 Đang check...');
+    const res = await apiPost('/api/check-blacklist', { uid, platform });
+    hideLoading();
+    btn.disabled = false;
+    if (!res.success) { showResult('bl-result', 'fail', '<div class="res-badge fail">❌ ' + esc(res.error) + '</div>'); return; }
+    const r = res.result;
+    let type = r.status === 'black' ? 'fail' : r.status === 'unknown' ? 'warn' : 'ok';
+    let html = '<div class="res-badge ' + type + '">' + r.label + '</div>';
+    html += '<div class="info-box" style="margin-top:10px;">' +
+        '<div class="row"><span class="label">🆔 UNIQ_ID</span><span class="value">' + esc(uid) + '</span></div>' +
+        '<div class="row"><span class="label">🌐 Platform</span><span class="value">' + esc(r.platform) + '</span></div>' +
+        (r.detail ? '<div class="row"><span class="label">📝 Chi tiết</span><span class="value" style="font-size:11px">' + esc(r.detail) + '</span></div>' : '') +
+        '</div>';
+    showResult('bl-result', type, html);
+});
+
+// ==================== USER INFO ====================
+document.getElementById('ui-fetch').addEventListener('click', async () => {
+    const uid = document.getElementById('ui-uid').value.trim();
+    const host = document.getElementById('ui-host').value.trim();
+    const platform = document.getElementById('ui-platform').value;
+    if (!uid || !host) return alert('Nhập đủ UID và HOST!');
+    const btn = document.getElementById('ui-fetch');
+    btn.disabled = true;
+    showLoading('👤 Đang lấy info acc...');
+    const res = await apiPost('/api/fetch-user', { uid, host, platform });
+    hideLoading();
+    btn.disabled = false;
+    if (!res.success) { showResult('ui-result', 'fail', '<div class="res-badge fail">❌ ' + esc(res.error) + '</div>'); return; }
+    const d = res.data;
+    let html = '<div class="res-badge ok">✅ LẤY INFO THÀNH CÔNG</div>';
+    html += '<div class="info-box">' +
+        '<div class="section">👤 CƠ BẢN</div>' +
+        '<div class="row"><span class="label">👤 Tên</span><span class="value">' + esc(d.userName) + '</span></div>' +
+        '<div class="row"><span class="label">🆙 Level</span><span class="value">' + d.level + ' (Exp ' + Number(d.level_exp).toLocaleString() + ')</span></div>' +
+        '<div class="row"><span class="label">🌍 Country</span><span class="value">' + esc(d.country) + '</span></div>' +
+        '<div class="row"><span class="label">🔄 Run Count</span><span class="value">' + d.run_count + '</span></div>' +
+        '<div class="row"><span class="label">🔑 GICHAPO</span><span class="value" style="font-size:11px">' + esc(d.gichapo) + '</span></div>' +
+        '<div class="section">💰 TÀI NGUYÊN</div>' +
+        '<div class="row"><span class="label">💎 Ruby</span><span class="value">' + Number(d.ruby).toLocaleString() + '</span></div>' +
+        '<div class="row"><span class="label">💠 Dia</span><span class="value">' + Number(d.dia).toLocaleString() + '</span></div>' +
+        '<div class="row"><span class="label">🟡 Gold</span><span class="value">' + Number(d.gold).toLocaleString() + '</span></div>' +
+        '<div class="row"><span class="label">🔮 Magic</span><span class="value">' + Number(d.magic).toLocaleString() + '</span></div>' +
+        '<div class="row"><span class="label">🎫 Mileage</span><span class="value">' + Number(d.mileage).toLocaleString() + '</span></div>' +
+        '<div class="section">🎮 TIẾN TRÌNH</div>' +
+        '<div class="row"><span class="label">📅 Chul</span><span class="value">' + esc(d.chul_date) + ' / ' + d.chul_num + '</span></div>' +
+        '<div class="row"><span class="label">🎯 Easy</span><span class="value">' + d.easy_cleared + '/' + d.easy_total + '</span></div>' +
+        '<div class="row"><span class="label">🎯 Normal</span><span class="value">' + d.normal_cleared + '/' + d.normal_total + '</span></div>' +
+        '<div class="row"><span class="label">🎯 Hard</span><span class="value">' + d.hard_cleared + '/' + d.hard_total + '</span></div>' +
+        '<div class="section">🏰 TƯỚNG & BANG</div>' +
+        '<div class="row"><span class="label">🗼 Số Tháp</span><span class="value">' + d.towers.length + '</span></div>' +
+        '<div class="row"><span class="label">🦸 Hero mở</span><span class="value">' + d.heroes.length + '</span></div>' +
+        '<div class="row"><span class="label">🏰 Guild</span><span class="value">' + esc(d.guild_name || '(không có)') + (d.guild_bunho ? ' [' + d.guild_bunho + ']' : '') + '</span></div>' +
+        '<div class="row"><span class="label">📊 Điểm Bang</span><span class="value">' + Number(d.guild_score).toLocaleString() + '</span></div>' +
+        '</div>';
+    showResult('ui-result', 'ok', html);
+});
+
+// ==================== TẠO BANG ====================
+document.getElementById('cg-create').addEventListener('click', async () => {
+    const uid = document.getElementById('cg-uid').value.trim();
+    const host = document.getElementById('cg-host').value.trim();
+    const platform = document.getElementById('cg-platform').value;
+    const guild_name = document.getElementById('cg-name').value.trim();
+    const guild_type = document.getElementById('cg-type').value;
+    const max_member = parseInt(document.getElementById('cg-max').value) || 30;
+    if (!uid || !host || !guild_name) return alert('Nhập đủ UID, HOST, Tên bang!');
+    const btn = document.getElementById('cg-create');
+    btn.disabled = true;
+    showLoading('🏛️ Đang tạo bang ' + guild_name + '...');
+    const res = await apiPost('/api/create-guild', { uid, host, platform, guild_name, guild_type, max_member });
+    hideLoading();
+    btn.disabled = false;
+    if (!res.success) { showResult('cg-result', 'fail', '<div class="res-badge fail">❌ ' + esc(res.error) + '</div>'); return; }
+    const type = res.isOk ? 'ok' : 'warn';
+    let html = res.isOk ? '<div class="res-badge ok">✅ TẠO BANG THÀNH CÔNG</div>' : '<div class="res-badge warn">⚠️ CHƯA RÕ</div>';
+    html += '<div class="info-box" style="margin-top:10px;">' +
+        '<div class="row"><span class="label">🏰 Tên bang</span><span class="value">' + esc(res.guild_name) + '</span></div>' +
+        '<div class="row"><span class="label">👤 Chủ bang</span><span class="value">' + esc(res.user_name) + ' (Lv ' + res.user_level + ')</span></div>' +
+        (res.comment ? '<div class="row"><span class="label">📝 Server</span><span class="value">' + esc(res.comment) + '</span></div>' : '') +
+        '</div>';
+    showResult('cg-result', type, html);
+});
+
+// ==================== RỜI BANG ====================
+document.querySelectorAll('[data-lg-mode]').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const mode = parseInt(btn.dataset.lgMode);
+        document.querySelectorAll('#modal-leave-guild .step').forEach(s => s.classList.add('hidden'));
+        if (mode === 1) document.getElementById('lg-step-m1').classList.remove('hidden');
+        else document.getElementById('lg-step-m2a').classList.remove('hidden');
+    });
+});
+document.getElementById('lg-m1-back').addEventListener('click', () => {
+    document.querySelectorAll('#modal-leave-guild .step').forEach(s => s.classList.add('hidden'));
+    document.getElementById('lg-step1').classList.remove('hidden');
+});
+document.getElementById('lg-m2-back').addEventListener('click', () => {
+    document.querySelectorAll('#modal-leave-guild .step').forEach(s => s.classList.add('hidden'));
+    document.getElementById('lg-step1').classList.remove('hidden');
+});
+document.getElementById('lg-m2-back2').addEventListener('click', () => {
+    document.querySelectorAll('#modal-leave-guild .step').forEach(s => s.classList.add('hidden'));
+    document.getElementById('lg-step-m2a').classList.remove('hidden');
+});
+document.getElementById('lg-m1-confirm').addEventListener('click', async () => {
+    const uid = document.getElementById('lg-m1-uid').value.trim();
+    const guild = document.getElementById('lg-m1-guild').value.trim();
+    if (!uid || !guild) return alert('Nhập đủ UID và ID Bang!');
+    if (!confirm('Xác nhận rời bang ' + guild + ' cho UID ' + uid + '?')) return;
+    showLoading('🚪 Đang rời bang...');
+    const res = await apiPost('/api/leave-guild', { uid, guild_id: guild, platform: 'AMO', use_fixed: true });
+    hideLoading();
+    if (!res.success) { alert('❌ ' + res.error); return; }
+    const type = res.isOk ? 'ok' : 'warn';
+    showResult('lg-result', type,
+        '<div class="res-badge ' + type + '">' + (res.isOk ? '✅ RỜI BANG THÀNH CÔNG' : '⚠️ CHƯA RÕ') + '</div>' +
+        '<div class="info-box" style="margin-top:10px;">' +
+        '<div class="row"><span class="label">🆔 UID</span><span class="value">' + esc(uid) + '</span></div>' +
+        '<div class="row"><span class="label">🏰 Guild</span><span class="value">' + esc(guild) + '</span></div>' +
+        (res.comment ? '<div class="row"><span class="label">📝 Server</span><span class="value">' + esc(res.comment) + '</span></div>' : '') +
+        '</div>');
+});
+
+let lg2UserInfo = null;
+document.getElementById('lg-m2-fetch').addEventListener('click', async () => {
+    const uid = document.getElementById('lg-m2-uid').value.trim();
+    const host = document.getElementById('lg-m2-host').value.trim();
+    const platform = document.getElementById('lg-m2-platform').value;
+    if (!uid || !host) return alert('Nhập đủ UID và HOST!');
+    showLoading('📥 Đang lấy info acc...');
+    const res = await apiPost('/api/fetch-user', { uid, host, platform });
+    hideLoading();
+    if (!res.success) { alert('❌ ' + res.error); return; }
+    lg2UserInfo = { uid, host, platform, data: res.data };
+    const d = res.data;
+    let infoHtml = '<div class="info-box">' +
+        '<div class="row"><span class="label">👤 Tên</span><span class="value">' + esc(d.userName) + '</span></div>' +
+        '<div class="row"><span class="label">🆙 Level</span><span class="value">' + d.level + '</span></div>' +
+        '<div class="row"><span class="label">🏰 Bang</span><span class="value">' + esc(d.guild_name || '(không có)') + (d.guild_bunho ? ' [ID: ' + d.guild_bunho + ']' : '') + '</span></div>' +
+        '</div>';
+    document.getElementById('lg-m2-info').innerHTML = infoHtml;
+    document.querySelectorAll('#modal-leave-guild .step').forEach(s => s.classList.add('hidden'));
+    document.getElementById('lg-step-m2b').classList.remove('hidden');
+    document.getElementById('lg-result2').classList.add('hidden');
+    const hasGuild = !!d.guild_bunho;
+    document.getElementById('lg-m2-hasguild').classList.toggle('hidden', !hasGuild);
+    document.getElementById('lg-m2-noguild').classList.toggle('hidden', hasGuild);
+});
+document.getElementById('lg-m2-confirm').addEventListener('click', async () => {
+    if (!lg2UserInfo) return;
+    const d = lg2UserInfo.data;
+    if (!d.guild_bunho) return alert('Acc không có bang!');
+    if (!confirm('Xác nhận rời bang ' + d.guild_name + ' [' + d.guild_bunho + ']?')) return;
+    showLoading('🚪 Đang rời bang...');
+    const res = await apiPost('/api/leave-guild', {
+        uid: lg2UserInfo.uid, platform: lg2UserInfo.platform,
+        guild_id: d.guild_bunho, gichapo: d.gichapo, use_fixed: false
+    });
+    hideLoading();
+    if (!res.success) { alert('❌ ' + res.error); return; }
+    const type = res.isOk ? 'ok' : 'warn';
+    showResult('lg-result2', type,
+        '<div class="res-badge ' + type + '">' + (res.isOk ? '✅ RỜI BANG THÀNH CÔNG' : '⚠️ CHƯA RÕ') + '</div>' +
+        '<div class="info-box" style="margin-top:10px;">' +
+        '<div class="row"><span class="label">🆔 UID</span><span class="value">' + esc(lg2UserInfo.uid) + '</span></div>' +
+        '<div class="row"><span class="label">🏰 Guild</span><span class="value">' + esc(d.guild_name) + '</span></div>' +
+        '</div>');
+});
+
+// ==================== KICK MEMBER ====================
+let kmState = { platform: 'AMO', user_gichapo: '', user_uid: '', guild_id: 0, master_uid: '', members: [] };
+
+document.getElementById('km-fetch-user').addEventListener('click', async () => {
+    const uid = document.getElementById('km-uid').value.trim();
+    const host = document.getElementById('km-host').value.trim();
+    const platform = document.getElementById('km-platform').value;
+    if (!uid || !host) return alert('Nhập đủ UID và HOST!');
+    showLoading('📥 Đang lấy info acc...');
+    const res = await apiPost('/api/fetch-user', { uid, host, platform });
+    hideLoading();
+    if (!res.success) { alert('❌ ' + res.error); return; }
+    const d = res.data;
+    kmState.platform = platform;
+    kmState.user_gichapo = d.gichapo;
+    kmState.user_uid = uid;
+    let infoHtml = '<div class="info-box">' +
+        '<div class="row"><span class="label">👤 Tên</span><span class="value">' + esc(d.userName) + '</span></div>' +
+        '<div class="row"><span class="label">🆔 UID</span><span class="value">' + esc(uid) + '</span></div>' +
+        '<div class="row"><span class="label">🆙 Level</span><span class="value">' + d.level + '</span></div>' +
+        '<div class="row"><span class="label">🏰 Bang</span><span class="value">' + esc(d.guild_name || '(không có)') + (d.guild_bunho ? ' [' + d.guild_bunho + ']' : '') + '</span></div>' +
+        '<div class="row"><span class="label">🔑 GICHAPO</span><span class="value" style="font-size:11px">' + esc(d.gichapo) + '</span></div>' +
+        '</div>';
+    document.getElementById('km-user-info').innerHTML = infoHtml;
+    document.querySelectorAll('#modal-kick-member .step').forEach(s => s.classList.add('hidden'));
+    document.getElementById('km-step2').classList.remove('hidden');
+});
+
+document.getElementById('km-fetch-guild').addEventListener('click', async () => {
+    const guild = document.getElementById('km-guild').value.trim();
+    if (!guild) return alert('Nhập ID bang!');
+    showLoading('🏰 Đang lấy info bang...');
+    const res = await apiPost('/api/guild-info', { guild_bunho: guild });
+    hideLoading();
+    if (!res.success) { alert('❌ ' + res.error); return; }
+    const d = res.data;
+    kmState.guild_id = d.guild_bunho;
+    kmState.members = d.members;
+    let infoHtml = '<div class="info-box">' +
+        '<div class="section">🏰 ' + esc(d.guild_name) + ' (ID: ' + esc(d.guild_bunho) + ')</div>' +
+        '<div class="row"><span class="label">👑 Chủ</span><span class="value">' + esc(d.master.name) + ' (Lv ' + esc(d.master.level) + ')</span></div>' +
+        '<div class="row"><span class="label">🆔 ID Chủ</span><span class="value">' + esc(d.master.id) + '</span></div>' +
+        '<div class="row"><span class="label">👥 Slot</span><span class="value">' + d.members.length + '/' + d.max_member + '</span></div>' +
+        '</div>';
+    document.getElementById('km-guild-info').innerHTML = infoHtml;
+    document.getElementById('km-master').value = d.master.id || '';
+    document.querySelectorAll('#modal-kick-member .step').forEach(s => s.classList.add('hidden'));
+    document.getElementById('km-step3').classList.remove('hidden');
+});
+
+async function renderKickList(containerSuffix = '') {
+    const res = await apiPost('/api/guild-info', { guild_bunho: kmState.guild_id });
+    if (!res.success) { alert('❌ ' + res.error); return; }
+    const d = res.data;
+    kmState.members = d.members;
+    const listId = 'km-member-rows' + containerSuffix;
+    let html = '<div style="color:var(--yellow);font-weight:800;margin-bottom:8px;">📋 ' + d.members.length + ' THÀNH VIÊN — CLICK ĐỂ KICK</div>';
+    html += '<div class="member-list" id="' + listId + '">';
+    d.members.forEach((m, i) => {
+        html += '<div class="member-row" data-idx="' + i + '" data-uid="' + esc(m.uniq_id) + '">' +
+            '<div class="member-stt">' + (i + 1) + '</div>' +
+            '<div class="member-name">' + esc(m.name) + ' <span style="opacity:0.6;font-size:10px">[' + esc(m.uniq_id) + ']</span></div>' +
+            '<div class="member-meta">' +
+                '<span class="badge">Lv ' + esc(m.level) + '</span>' +
+                '<span class="badge">' + esc(m.platform) + '</span>' +
+            '</div></div>';
+    });
+    html += '</div>';
+    document.getElementById('km-member-list').innerHTML = html;
+    document.getElementById('km-result').classList.add('hidden');
+    document.getElementById('km-next-actions').classList.add('hidden');
+
+    document.querySelectorAll('#' + listId + ' .member-row').forEach(row => {
+        row.addEventListener('click', async () => {
+            const target_uid = row.dataset.uid;
+            const target_name = d.members[parseInt(row.dataset.idx)].name;
+            if (!confirm('Kick ' + target_name + ' [' + target_uid + ']?')) return;
+            showLoading('🧹 Đang kick ' + target_name + '...');
+            const r = await apiPost('/api/kick-member', {
+                platform: kmState.platform,
+                master_uid: kmState.master_uid,
+                guild_id: kmState.guild_id,
+                target_uid: target_uid,
+                gichapo: kmState.user_gichapo,
+                use_fixed: false
+            });
+            hideLoading();
+            if (!r.success) { alert('❌ ' + r.error); return; }
+            const type = r.isOk ? 'ok' : 'warn';
+            showResult('km-result', type,
+                '<div class="res-badge ' + type + '">' + (r.isOk ? '✅ KICK THÀNH CÔNG' : '⚠️ CHƯA RÕ') + '</div>' +
+                '<div class="info-box" style="margin-top:10px;">' +
+                '<div class="row"><span class="label">🎯 Target</span><span class="value">' + esc(target_name) + ' (' + esc(target_uid) + ')</span></div>' +
+                (r.comment ? '<div class="row"><span class="label">📝 Server</span><span class="value">' + esc(r.comment) + '</span></div>' : '') +
+                '</div>');
+            document.getElementById('km-next-actions').classList.remove('hidden');
+        });
+    });
+}
+
+document.getElementById('km-load-members').addEventListener('click', async () => {
+    const master = document.getElementById('km-master').value.trim();
+    if (!master) return alert('Nhập UID chủ bang!');
+    kmState.master_uid = master;
+    document.querySelectorAll('#modal-kick-member .step').forEach(s => s.classList.add('hidden'));
+    document.getElementById('km-step4').classList.remove('hidden');
+    await renderKickList('');
+});
+
+document.getElementById('km-more').addEventListener('click', async () => {
+    showLoading('🔄 Đang tải lại danh sách...');
+    await renderKickList(Date.now());
+    hideLoading();
+});
+
+document.getElementById('km-stop').addEventListener('click', () => {
+    document.getElementById('km-next-actions').classList.add('hidden');
+    alert('✅ Đã dừng kick.');
+});
+
+// ==================== CHUYỂN CHỦ ====================
+let tmState = { gichapo: '' };
+document.getElementById('tm-start').addEventListener('click', async () => {
+    showLoading('🔑 Đang lấy GICHAPO...');
+    const res = await apiPost('/api/fetch-user', {
+        uid: 'TDM590145qQF_1', host: 'duongduonghy2021@gmail.com', platform: 'AMO'
+    });
+    hideLoading();
+    if (!res.success) { alert('❌ ' + res.error); return; }
+    tmState.gichapo = res.data.gichapo;
+    document.querySelectorAll('#modal-transfer-master .step').forEach(s => s.classList.add('hidden'));
+    document.getElementById('tm-step1').classList.remove('hidden');
+    document.getElementById('tm-result').classList.add('hidden');
+});
+document.getElementById('tm-fetch-guild').addEventListener('click', async () => {
+    const guild = document.getElementById('tm-guild').value.trim();
+    if (!guild) return alert('Nhập ID bang!');
+    showLoading('🏰 Đang lấy info bang...');
+    const res = await apiPost('/api/guild-info', { guild_bunho: guild });
+    hideLoading();
+    if (!res.success) { alert('❌ ' + res.error); return; }
+    const d = res.data;
+    let infoHtml = '<div class="info-box">' +
+        '<div class="section">🏰 ' + esc(d.guild_name) + ' (ID: ' + esc(d.guild_bunho) + ')</div>' +
+        '<div class="row"><span class="label">👑 Chủ hiện tại</span><span class="value">' + esc(d.master.name) + ' (Lv ' + esc(d.master.level) + ')</span></div>' +
+        '<div class="row"><span class="label">🆔 ID Chủ</span><span class="value">' + esc(d.master.id) + '</span></div>' +
+        '<div class="row"><span class="label">👥 Slot</span><span class="value">' + d.members.length + '/' + d.max_member + '</span></div>' +
+        '</div>';
+    document.getElementById('tm-guild-info').innerHTML = infoHtml;
+    document.getElementById('tm-old-master').value = d.master.id || '';
+    tmState.guild_id = d.guild_bunho;
+    tmState.platform = d.master.platform || 'AMO';
+    document.querySelectorAll('#modal-transfer-master .step').forEach(s => s.classList.add('hidden'));
+    document.getElementById('tm-step2').classList.remove('hidden');
+});
+document.getElementById('tm-confirm').addEventListener('click', async () => {
+    const old_uid = document.getElementById('tm-old-master').value.trim();
+    const new_uid = document.getElementById('tm-new-master').value.trim();
+    const new_name = document.getElementById('tm-new-name').value.trim();
+    const new_level = parseInt(document.getElementById('tm-new-level').value) || 1;
+    if (!old_uid || !new_uid || !new_name) return alert('Nhập đủ thông tin!');
+    if (!confirm('Xác nhận chuyển chủ bang ' + tmState.guild_id + '?')) return;
+    showLoading('👑 Đang chuyển chủ...');
+    const res = await apiPost('/api/transfer-master', {
+        platform: tmState.platform, guild_id: tmState.guild_id,
+        old_master_uid: old_uid, new_master_uid: new_uid,
+        new_master_name: new_name, new_master_level: new_level,
+        gichapo: tmState.gichapo, use_fixed: false
+    });
+    hideLoading();
+    if (!res.success) { showResult('tm-result', 'fail', '<div class="res-badge fail">❌ ' + esc(res.error) + '</div>'); return; }
+    const type = res.isOk ? 'ok' : 'warn';
+    showResult('tm-result', type,
+        '<div class="res-badge ' + type + '">' + (res.isOk ? '✅ CHUYỂN CHỦ THÀNH CÔNG' : '⚠️ CHƯA RÕ') + '</div>' +
+        '<div class="info-box" style="margin-top:10px;">' +
+        '<div class="row"><span class="label">🏰 Guild</span><span class="value">' + esc(tmState.guild_id) + '</span></div>' +
+        '<div class="row"><span class="label">👑 Chủ cũ</span><span class="value">' + esc(old_uid) + '</span></div>' +
+        '<div class="row"><span class="label">👑 Chủ mới</span><span class="value">' + esc(new_name) + ' (' + esc(new_uid) + ')</span></div>' +
+        (res.comment ? '<div class="row"><span class="label">📝 Server</span><span class="value">' + esc(res.comment) + '</span></div>' : '') +
+        '</div>');
+});
+
+// ==================== PROXY ====================
+async function loadProxyStatus() {
+    const res = await apiGet('/api/proxy/status');
+    if (!res.ok) return;
+    document.getElementById('proxy-total').textContent = res.total;
+    document.getElementById('proxy-current').textContent = res.current || 'Chưa set';
+    document.getElementById('proxy-auto-status').textContent = res.auto ? 'BẬT' : 'Tắt';
+    document.getElementById('proxy-auto').checked = res.auto;
+    if (Array.isArray(res.proxies)) {
+        document.getElementById('proxy-list').value = res.proxies.join('\n');
+    }
+}
+document.getElementById('proxyBtn').addEventListener('click', () => {
+    openModal('modal-proxy');
+    loadProxyStatus();
+});
+document.getElementById('proxy-save').addEventListener('click', async () => {
+    const raw = document.getElementById('proxy-list').value;
+    const auto = document.getElementById('proxy-auto').checked;
+    const proxies = raw.split('\n').map(s => s.trim()).filter(Boolean);
+    showLoading('💾 Đang lưu proxy...');
+    const res = await apiPost('/api/proxy/set', { proxies, auto });
+    hideLoading();
+    if (res.ok) {
+        await loadProxyStatus();
+        alert('✅ Đã lưu ' + res.total + ' proxy' + (res.auto ? ' (AUTO: BẬT)' : ''));
+    } else {
+        alert('❌ ' + (res.error || 'Lỗi'));
+    }
+});
+document.getElementById('proxy-rotate').addEventListener('click', async () => {
+    showLoading('🔄 Đang đổi proxy...');
+    const res = await apiPost('/api/proxy/rotate', {});
+    hideLoading();
+    if (res.ok) await loadProxyStatus();
+    else alert('⚠️ Chưa có proxy. Nhập và lưu trước!');
+});
+</script>
+</body>
+</html>
